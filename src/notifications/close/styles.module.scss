@@ -1,0 +1,19 @@
+.body {
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: rgba(#505868, 0.8);
+  }
+
+  &:active {
+    background-color: rgba(#505868, 0.9);
+  }
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}

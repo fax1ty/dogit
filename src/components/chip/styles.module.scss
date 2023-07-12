@@ -1,0 +1,46 @@
+.chip {
+  align-items: center;
+  display: flex;
+  height: 22px;
+  padding-inline: 4px;
+  color: white;
+  transition: all 0.3s ease;
+  outline-width: 1px;
+  outline-color: transparent;
+  outline-style: solid;
+  border-radius: 6px;
+  overflow: hidden;
+  gap: 4px;
+  background-color: rgba(white, 0.35);
+
+  &.outlined {
+    outline-color: white;
+  }
+
+  &.button {
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba(white, 0.4);
+    }
+
+    &.active,
+    &:active {
+      background-color: rgba(white, 0.5);
+    }
+
+    &:disabled {
+      background-color: rgba(white, 0.35);
+      cursor: default;
+    }
+  }
+
+  svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  p {
+    font-size: 10px;
+  }
+}

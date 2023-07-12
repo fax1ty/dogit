@@ -1,0 +1,11 @@
+.notification {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+
+  .content {
+    background-color: rgba(#505868, 0.7);
+    padding-inline: 16px;
+    padding-block: 14px;
+  }
+}

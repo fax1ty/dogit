@@ -1,0 +1,40 @@
+[package]
+name = "dogit"
+version = "0.0.7"
+description = "Dogit"
+authors = ["Artemiy Davydov"]
+license = "MIT"
+repository = "https://github.com/fax1ty/dogit"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[build-dependencies]
+tauri-build = { version = "1.4", features = [] }
+
+[dependencies]
+tauri = { version = "1.4", features = [
+    "window-set-focus",
+    "window-set-position",
+    "window-set-size",
+    "window-hide",
+    "shell-execute",
+    "shell-open",
+    "system-tray",
+] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tauri-plugin-positioner = "1.0"
+tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+# windows = { version = "0.48", features = [
+#     "Win32_Foundation",
+#     "Win32_UI_WindowsAndMessaging",
+# ] }
+tauri-plugin-deep-link = "0.1.1"
+tempfile = "3.6.0"
+directories = "5.0.1"
+
+[features]
+# this feature is used for production builds or when `devPath` points to the filesystem
+# DO NOT REMOVE!!
+custom-protocol = ["tauri/custom-protocol"]

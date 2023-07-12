@@ -1,0 +1,96 @@
+@keyframes hero_one {
+  0% {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0.8;
+  }
+}
+
+@keyframes hero_two {
+  0% {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0.5;
+  }
+}
+
+@keyframes hero_three {
+  0% {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0.7;
+  }
+}
+
+.blobs {
+  transform: scale(2);
+  transform-origin: center 12px;
+  position: absolute;
+
+  .fast {
+    .one,
+    .two,
+    .three {
+      // animation-delay: -1.25s;
+    }
+
+    .one {
+      animation-duration: 0.5s;
+    }
+
+    .two {
+      animation-duration: 1s;
+    }
+
+    .three {
+      animation-duration: 1.5s;
+    }
+  }
+
+  .one,
+  .two,
+  .three {
+    transform-origin: right;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-fill-mode: none;
+    // animation-delay: -2.5s;
+    animation-play-state: running;
+    transition: all 1s ease;
+  }
+
+  .one {
+    animation-duration: 1s;
+    animation-name: hero_one;
+  }
+
+  .two {
+    animation-duration: 2s;
+    animation-name: hero_two;
+  }
+
+  .three {
+    animation-duration: 3s;
+    animation-name: hero_three;
+  }
+}
+
+.noise {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0.15;
+  background-image: url("./noise.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-blend-mode: soft-light;
+}

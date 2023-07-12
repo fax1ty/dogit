@@ -1,0 +1,90 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/schema.json",
+  "build": {
+    "beforeDevCommand": "yarn dev",
+    "beforeBuildCommand": "yarn build",
+    "devPath": "http://localhost:1420",
+    "distDir": "../dist",
+    "withGlobalTauri": false
+  },
+  "package": {
+    "productName": "dogit",
+    "version": "0.0.7"
+  },
+  "tauri": {
+    "allowlist": {
+      "all": false,
+      "window": {
+        "all": false,
+        "hide": true,
+        "setSize": true,
+        "setPosition": true,
+        "setFocus": true
+      },
+      "shell": {
+        "scope": [
+          {
+            "name": "git",
+            "cmd": "git",
+            "args": true
+          },
+          {
+            "name": "gpg",
+            "cmd": "gpg",
+            "args": true
+          },
+          {
+            "name": "ssh",
+            "cmd": "ssh",
+            "args": true
+          },
+          {
+            "name": "ssh-keygen",
+            "cmd": "ssh-keygen",
+            "args": true
+          },
+          {
+            "name": "cmd.exe",
+            "cmd": "cmd.exe",
+            "args": true
+          }
+        ],
+        "all": false,
+        "execute": true,
+        "open": true
+      }
+    },
+    "bundle": {
+      "active": true,
+      "targets": "all",
+      "identifier": "tt.dogi.app",
+      "icon": [
+        "icons/32x32.png",
+        "icons/128x128.png",
+        "icons/128x128@2x.png",
+        "icons/icon.icns",
+        "icons/icon.ico"
+      ]
+    },
+    "security": {
+      "csp": null
+    },
+    "windows": [
+      {
+        "transparent": true,
+        "skipTaskbar": true,
+        "focus": false,
+        "alwaysOnTop": true,
+        "resizable": false,
+        "decorations": false,
+        "visible": false,
+        "width": 440,
+        "height": 460
+      }
+    ],
+    "systemTray": {
+      "iconPath": "icons/icon.png",
+      "iconAsTemplate": true
+    }
+  }
+}

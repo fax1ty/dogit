@@ -100,6 +100,15 @@ export const en = {
       You can read the patch notes on the page of this release on GitHub`,
       button: "What's new?",
     },
+    updater: {
+      title: "New version available",
+      description:
+        'Is it time to upgrade? Version __version__ is already available and ready for installation. By clicking on the "Install" button, the application will restart',
+      buttons: {
+        install: "Install",
+        skip: "Skip",
+      },
+    },
   },
   errors: {
     git_not_available: {

@@ -20,10 +20,11 @@ export const executeBase = (
       .then((cmd) => {
         if (cmd.code !== 0) {
           console.error(
-            `Ошибка при выполнении нативной команды "${base} ${
-              Array.isArray(args) ? args.join(" ") : args
+            `Ошибка при выполнении нативной команды "${base}${args ? " " : ""}${
+              args ? (Array.isArray(args) ? args.join(" ") : args) : ""
             }". Код: ${cmd.code}`,
-            cmd.stderr
+            cmd.stderr,
+            cmd.stdout
           );
           return rej({ code: cmd.code, message: cmd.stderr });
         }

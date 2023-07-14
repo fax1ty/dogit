@@ -1,25 +1,23 @@
-import { useEffect } from "react";
 import { ToastBar, Toaster } from "react-hot-toast";
 import { Talkr } from "talkr";
-import { enable } from "tauri-plugin-autostart-api";
 
 import { en } from "./i18n/en";
 import { ru } from "./i18n/ru";
+import { Autostart } from "./managers/autostart";
 import { DeepLinks } from "./managers/deeplinks";
 import { Focuser } from "./managers/focuser";
+import { NoContext } from "./managers/no-context";
 import { Notifications } from "./managers/notifications";
 import { Resizer } from "./managers/resizer";
 
 export const App = () => {
-  useEffect(() => {
-    if (!import.meta.env.DEV) enable();
-  }, []);
-
   return (
     <Talkr languages={{ ru, en }} defaultLanguage="en" detectBrowserLanguage>
       <DeepLinks />
       <Resizer />
+      <NoContext />
       <Focuser />
+      <Autostart />
       <Notifications />
 
       {/* https://github.com/timolins/react-hot-toast/issues/293 */}

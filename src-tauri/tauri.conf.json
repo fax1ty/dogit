@@ -9,7 +9,7 @@
   },
   "package": {
     "productName": "dogit",
-    "version": "0.0.7"
+    "version": "0.0.8"
   },
   "tauri": {
     "allowlist": {
@@ -52,6 +52,10 @@
         "all": false,
         "execute": true,
         "open": true
+      },
+      "process": {
+        "all": false,
+        "relaunch": true
       }
     },
     "bundle": {
@@ -85,6 +89,14 @@
     "systemTray": {
       "iconPath": "icons/icon.png",
       "iconAsTemplate": true
+    },
+    "updater": {
+      "active": true,
+      "endpoints": [
+        "https://github.com/fax1ty/dogit/releases/latest/download/latest.json"
+      ],
+      "dialog": false,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDg0REQyNTZGMEUzMEUzQjAKUldTdzR6QU9ieVhkaEJhc2lpbFRGK1hUQUlScUJaSFQ0RDRTZnROb2Y0NzJuRVVkQ1MyUThSc2wK"
     }
   }
 }

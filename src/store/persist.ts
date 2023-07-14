@@ -80,6 +80,8 @@ interface PersistStore {
   finishSync: (id: Profile["user"]["id"]) => void;
   setGPGKey: (id: Profile["user"]["id"], secretId: string | false) => void;
   setSSHKey: (id: Profile["user"]["id"], pub: string | false) => void;
+  skippedVersions: string[];
+  skipVersion: (v: string) => void;
 }
 
 const COLORS = [
@@ -181,6 +183,9 @@ export const usePersistStore = create(
           profiles[idx].sync.lastSyncTime = Date.now();
           return { profiles };
         }),
+      skippedVersions: [],
+      skipVersion: (v) =>
+        set((old) => ({ skippedVersions: [...old.skippedVersions, v] })),
     }),
     { name: "persist-store", version: 5 }
   )

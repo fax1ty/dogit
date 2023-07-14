@@ -35,12 +35,12 @@ const UpdateNotificationBody = () => {
 };
 
 interface Props {
-  id: string;
+  toastId: string;
 }
 
-export const UpdateNotification = ({ id }: Props) => {
+export const UpdateNotification = ({ toastId }: Props) => {
   return (
-    <AutoClosableNotificationBody id={id}>
+    <AutoClosableNotificationBody id={toastId}>
       <UpdateNotificationBody />
     </AutoClosableNotificationBody>
   );

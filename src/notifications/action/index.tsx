@@ -8,7 +8,7 @@ import classes from "./styles.module.scss";
 interface Props {
   title: string;
   description: string;
-  children: ReactElement<ActionButtonProps>;
+  children: ReactElement<ActionButtonProps> | ReactElement<ActionButtonProps>[];
 }
 
 export const GenericActionNotificationBody = ({
@@ -23,7 +23,7 @@ export const GenericActionNotificationBody = ({
           <Typography bold>{title}</Typography>
           <Typography>{description}</Typography>
         </div>
-        {children}
+        <div className={classes.buttons}>{children}</div>
       </div>
     </BaseNotificationBody>
   );

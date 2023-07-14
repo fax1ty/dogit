@@ -1,17 +1,19 @@
-import { ArrowRight } from "@phosphor-icons/react";
+import { ArrowRight, Icon } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { HTMLAttributes } from "react";
+import { ButtonHTMLAttributes, createElement } from "react";
 import { SpinnerCircular } from "spinners-react";
 
 import { Typography } from "../../typography";
 import classes from "./styles.module.scss";
 
 export type ActionButtonProps = {
+  icon?: Icon;
   reverse?: boolean;
   loading?: boolean;
-} & HTMLAttributes<HTMLButtonElement>;
+} & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export const ActionButton = ({
+  icon = ArrowRight,
   children,
   reverse = false,
   loading = false,
@@ -21,7 +23,7 @@ export const ActionButton = ({
     <button
       {...props}
       className={clsx(props.className, classes.button)}
-      disabled={loading}
+      disabled={props.disabled || loading}
     >
       <Typography bold>{children}</Typography>
       {loading ? (
@@ -33,11 +35,11 @@ export const ActionButton = ({
           thickness={300}
         />
       ) : (
-        <ArrowRight
-          className={clsx(classes.arrow, reverse && classes.reverse)}
-          size={18}
-          weight="bold"
-        />
+        createElement(icon, {
+          className: clsx(classes.arrow, reverse && classes.reverse),
+          size: 18,
+          weight: "bold",
+        })
       )}
     </button>
   );

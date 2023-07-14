@@ -8,7 +8,7 @@ const execute = (args?: string | string[]) => executeBase("git", args);
 
 export const isGitAvailable = async () => {
   try {
-    await execute();
+    await execute(["-v"]);
     return true;
   } catch (error) {
     return false;

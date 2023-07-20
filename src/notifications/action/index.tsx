@@ -2,7 +2,6 @@ import { ReactElement } from "react";
 
 import { ActionButtonProps } from "../../components/buttons/action";
 import { Typography } from "../../components/typography";
-import { BaseNotificationBody } from "../base";
 import classes from "./styles.module.scss";
 
 interface Props {
@@ -11,20 +10,18 @@ interface Props {
   children: ReactElement<ActionButtonProps> | ReactElement<ActionButtonProps>[];
 }
 
-export const GenericActionNotificationBody = ({
+export const GenericActionNotificationContent = ({
   children,
   title,
   description,
 }: Props) => {
   return (
-    <BaseNotificationBody>
-      <div className={classes.content}>
-        <div className={classes.text}>
-          <Typography bold>{title}</Typography>
-          <Typography>{description}</Typography>
-        </div>
-        <div className={classes.buttons}>{children}</div>
+    <div className={classes.content}>
+      <div className={classes.text}>
+        <Typography bold>{title}</Typography>
+        <Typography>{description}</Typography>
       </div>
-    </BaseNotificationBody>
+      <div className={classes.buttons}>{children}</div>
+    </div>
   );
 };

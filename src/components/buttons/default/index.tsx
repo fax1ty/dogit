@@ -4,11 +4,15 @@ import { SpinnerCircular } from "spinners-react";
 
 import classes from "./styles.module.scss";
 
-type Props = {
+export type ButtonProps = {
   loading?: boolean;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-export const Button = ({ loading = false, children, ...props }: Props) => {
+export const Button = ({
+  loading = false,
+  children,
+  ...props
+}: ButtonProps) => {
   return (
     <button {...props} className={clsx(props.className, classes.button)}>
       {children}

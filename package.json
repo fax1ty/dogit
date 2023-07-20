@@ -1,7 +1,7 @@
 {
   "name": "dogit",
   "private": true,
-  "version": "0.0.8",
+  "version": "0.0.9",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,11 +12,11 @@
   },
   "dependencies": {
     "@floating-ui/react": "^0.24.3",
-    "@fontsource/roboto": "^5.0.5",
     "@phosphor-icons/react": "^2.0.10",
     "@tauri-apps/api": "^1.4.0",
     "axios": "^1.4.0",
     "clsx": "^1.2.1",
+    "firebase": "^10.0.0",
     "just-throttle": "^4.2.0",
     "keen-slider": "^6.8.5",
     "react": "^18.2.0",

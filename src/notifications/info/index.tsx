@@ -8,27 +8,27 @@ import {
   AutoClosableNotificationProps,
 } from "../autoclosable";
 
-interface GenericErrorNotificationContentProps {
+interface GenericInfoNotificationContentProps {
   title?: string;
-  description?: string;
+  description: string;
   action?: () => void;
   actionText?: string;
 }
 
-const GenericErrorNotificationContent = ({
+const GenericInfoNotificationContent = ({
   toastId,
   title,
   description,
-  actionText,
   action,
-}: GenericErrorNotificationContentProps &
+  actionText,
+}: GenericInfoNotificationContentProps &
   Pick<AutoClosableNotificationProps, "toastId">) => {
   const { T } = useT();
 
   return (
     <GenericActionNotificationContent
-      title={title || T("errors.generic.title")}
-      description={description || T("errors.generic.description")}
+      title={title || T("info.generic.title")}
+      description={description}
     >
       <ActionButton
         onClick={() => {
@@ -36,16 +36,16 @@ const GenericErrorNotificationContent = ({
           toast.dismiss(toastId);
         }}
       >
-        {actionText || T("errors.generic.action_text")}
+        {actionText || T("info.generic.action_text")}
       </ActionButton>
     </GenericActionNotificationContent>
   );
 };
 
 type Props = AutoClosableNotificationProps &
-  GenericErrorNotificationContentProps;
+  GenericInfoNotificationContentProps;
 
-export const GenericErrorNotification = ({
+export const GenericInfoNotification = ({
   title,
   description,
   action,
@@ -55,9 +55,9 @@ export const GenericErrorNotification = ({
   return (
     <AutoClosableNotificationBody
       {...props}
-      duration={props.duration || 10 * 1000}
+      duration={props.duration || 6 * 1000}
     >
-      <GenericErrorNotificationContent
+      <GenericInfoNotificationContent
         toastId={props.toastId}
         title={title}
         description={description}

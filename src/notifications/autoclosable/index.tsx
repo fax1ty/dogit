@@ -6,20 +6,24 @@ import { useVisualProgress } from "../../hooks/progress";
 import { BaseNotificationBody } from "../base";
 import classes from "./styles.module.scss";
 
-type Props = {
+export interface AutoClosableNotificationProps {
   duration?: number;
-  id: string;
+  toastId: string;
+}
+
+type Props = {
   children: ReactElement;
-} & HTMLAttributes<HTMLDivElement>;
+} & AutoClosableNotificationProps &
+  HTMLAttributes<HTMLDivElement>;
 
 export const AutoClosableNotificationBody = ({
   duration = 5 * 1000,
   children,
-  id,
+  toastId,
   ...props
 }: Props) => {
   const [progress, indicator] = useVisualProgress(duration, () => {
-    toast.dismiss(id);
+    toast.dismiss(toastId);
   });
 
   return (

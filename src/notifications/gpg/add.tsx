@@ -6,11 +6,13 @@ import { setAutosign, setSigningKey } from "../../api/git";
 import { addGPGKey } from "../../api/github";
 import { exportArmoredPubKey, generateGPGKey } from "../../api/gpg";
 import { ActionButton } from "../../components/buttons/action";
-import { Profile, usePersistStore } from "../../store/persist";
-import { GenericActionNotificationBody } from "../action";
+import { getProfileById, Profile, usePersistStore } from "../../store/persist";
+import { GenericActionNotificationContent } from "../action";
+import { BaseNotificationBody } from "../base";
+import { GenericErrorNotification } from "../error";
 
 interface Props {
-  id: Profile["user"]["id"];
+  userId: Profile["user"]["id"];
   toastId: string;
   onClose: () => void;
 }
@@ -33,7 +35,7 @@ const GPGActionButton = ({
   );
 };
 
-export const AddGPGNotification = ({ toastId, id, onClose }: Props) => {
+export const AddGPGNotification = ({ toastId, userId, onClose }: Props) => {
   const [inProgress, setInProgress] = useState(false);
 
   const setGPGKey = usePersistStore((state) => state.setGPGKey);
@@ -41,12 +43,9 @@ export const AddGPGNotification = ({ toastId, id, onClose }: Props) => {
   const onClick = async () => {
     setInProgress(true);
 
-    const profiles = usePersistStore.getState().profiles;
-    const profile = profiles.find(({ user }) => id === user.id);
+    const profile = getProfileById(userId);
 
-    if (!profile) {
-      return setInProgress(false);
-    }
+    if (!profile) return setInProgress(false);
 
     try {
       const secretId = await generateGPGKey(
@@ -58,12 +57,23 @@ export const AddGPGNotification = ({ toastId, id, onClose }: Props) => {
         await addGPGKey(profile.user.accessToken, pub);
       await setSigningKey(secretId);
       await setAutosign(true);
-      setGPGKey(profile.user.id, secretId);
+      setGPGKey(userId, secretId);
 
       onClose();
       toast.dismiss(toastId);
     } catch (error) {
-      console.error(error);
+      toast((t) => (
+        <GenericErrorNotification
+          toastId={t.id}
+          description={
+            error instanceof Object &&
+            "message" in error &&
+            typeof error["message"] === "string"
+              ? error.message
+              : T("errors.gpg_add_unknown_error")
+          }
+        />
+      ));
     } finally {
       setInProgress(false);
     }
@@ -72,15 +82,17 @@ export const AddGPGNotification = ({ toastId, id, onClose }: Props) => {
   const { T } = useT();
 
   return (
-    <GenericActionNotificationBody
-      title={T("notifications.gpg.add.title")}
-      description={
-        inProgress
-          ? T("notifications.gpg.add.description.in_progress")
-          : T("notifications.gpg.add.description.default")
-      }
-    >
-      <GPGActionButton onClick={onClick} inProgress={inProgress} />
-    </GenericActionNotificationBody>
+    <BaseNotificationBody>
+      <GenericActionNotificationContent
+        title={T("notifications.gpg.add.title")}
+        description={
+          inProgress
+            ? T("notifications.gpg.add.description.in_progress")
+            : T("notifications.gpg.add.description.default")
+        }
+      >
+        <GPGActionButton onClick={onClick} inProgress={inProgress} />
+      </GenericActionNotificationContent>
+    </BaseNotificationBody>
   );
 };

@@ -3,15 +3,17 @@ import toast from "react-hot-toast";
 import { useT } from "talkr";
 
 import { removeSigningKey, setAutosign } from "../../api/git";
+import { listGPGKeys, removeGPGKey } from "../../api/github";
 import { deleteGPGKey } from "../../api/gpg";
 import { ActionButton } from "../../components/buttons/action";
-import { Profile, usePersistStore } from "../../store/persist";
-import { GenericActionNotificationBody } from "../action";
+import { getProfileById, Profile, usePersistStore } from "../../store/persist";
+import { GenericActionNotificationContent } from "../action";
+import { BaseNotificationBody } from "../base";
 
 interface Props {
-  id: Profile["user"]["id"];
+  userId: Profile["user"]["id"];
   toastId: string;
-  onClose: () => void;
+  onClose?: () => void;
 }
 
 const GPGActionButton = ({
@@ -26,13 +28,13 @@ const GPGActionButton = ({
   return (
     <ActionButton loading={inProgress} onClick={onClick}>
       {inProgress
-        ? T("notifications.gpg.add.button.in_progress")
-        : T("notifications.gpg.add.button.default")}
+        ? T("notifications.gpg.remove.button.in_progress")
+        : T("notifications.gpg.remove.button.default")}
     </ActionButton>
   );
 };
 
-export const RemoveGPGNotification = ({ toastId, id, onClose }: Props) => {
+export const RemoveGPGNotification = ({ toastId, userId, onClose }: Props) => {
   const [inProgress, setInProgress] = useState(false);
 
   const setGPGKey = usePersistStore((state) => state.setGPGKey);
@@ -40,25 +42,25 @@ export const RemoveGPGNotification = ({ toastId, id, onClose }: Props) => {
   const onClick = async () => {
     setInProgress(true);
 
-    const profiles = usePersistStore.getState().profiles;
-    const profile = profiles.find(({ user }) => id === user.id);
+    const profile = getProfileById(userId);
 
-    if (!profile || !profile.gpg) {
-      return setInProgress(false);
-    }
+    if (!profile) return setInProgress(false);
 
     try {
       await removeSigningKey();
       await setAutosign(false);
-      //! 404
-      //   const keys = await listGPGKeys(profile.user.accessToken);
-      //   const gpg = keys.find(({ key_id }) => key_id === profile.gpg);
-      //   if (!gpg) throw new Error("No such GPG key");
-      //   await removeGPGKey(profile.user.accessToken, gpg.id);
+
+      if (profile.type === "github") {
+        const keys = await listGPGKeys(profile.user.accessToken);
+        const gpg = keys.find(({ key_id }) => key_id === profile.gpg);
+        if (!gpg) throw new Error("No such GPG key");
+        await removeGPGKey(profile.user.accessToken, gpg.id);
+      }
+
       await deleteGPGKey(profile.user.email);
       setGPGKey(profile.user.id, false);
 
-      onClose();
+      if (onClose) onClose();
       toast.dismiss(toastId);
     } catch (error) {
       console.error(error);
@@ -70,11 +72,13 @@ export const RemoveGPGNotification = ({ toastId, id, onClose }: Props) => {
   const { T } = useT();
 
   return (
-    <GenericActionNotificationBody
-      title={T("notifications.gpg.remove.title")}
-      description={T("notifications.gpg.remove.description")}
-    >
-      <GPGActionButton onClick={onClick} inProgress={inProgress} />
-    </GenericActionNotificationBody>
+    <BaseNotificationBody>
+      <GenericActionNotificationContent
+        title={T("notifications.gpg.remove.title")}
+        description={T("notifications.gpg.remove.description")}
+      >
+        <GPGActionButton onClick={onClick} inProgress={inProgress} />
+      </GenericActionNotificationContent>
+    </BaseNotificationBody>
   );
 };

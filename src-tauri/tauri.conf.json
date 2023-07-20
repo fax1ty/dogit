@@ -9,7 +9,7 @@
   },
   "package": {
     "productName": "dogit",
-    "version": "0.0.8"
+    "version": "0.0.9"
   },
   "tauri": {
     "allowlist": {
@@ -56,6 +56,10 @@
       "process": {
         "all": false,
         "relaunch": true
+      },
+      "clipboard": {
+        "all": false,
+        "writeText": true
       }
     },
     "bundle": {

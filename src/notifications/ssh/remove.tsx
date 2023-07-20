@@ -2,15 +2,17 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useT } from "talkr";
 
+import { listSSHKeys, removeSSHKey } from "../../api/github";
 import { removeSSHKeyFromKeychain } from "../../api/ssh";
 import { ActionButton } from "../../components/buttons/action";
-import { Profile, usePersistStore } from "../../store/persist";
-import { GenericActionNotificationBody } from "../action";
+import { getProfileById, Profile, usePersistStore } from "../../store/persist";
+import { GenericActionNotificationContent } from "../action";
+import { BaseNotificationBody } from "../base";
 
 interface Props {
-  id: Profile["user"]["id"];
+  userId: Profile["user"]["id"];
   toastId: string;
-  onClose: () => void;
+  onClose?: () => void;
 }
 
 const SSHActionButton = ({
@@ -31,36 +33,32 @@ const SSHActionButton = ({
   );
 };
 
-export const RemoveSSHNotification = ({ toastId, id, onClose }: Props) => {
+export const RemoveSSHNotification = ({ toastId, userId, onClose }: Props) => {
   const [inProgress, setInProgress] = useState(false);
 
-  const setSSHKey = usePersistStore((state) => state.setSSHKey);
+  const unsetSSHKey = usePersistStore((state) => state.unsetSSHKey);
 
   const onClick = async () => {
     setInProgress(true);
 
-    const profiles = usePersistStore.getState().profiles;
-    const profile = profiles.find(({ user }) => id === user.id);
+    const profile = getProfileById(userId);
 
-    if (!profile || !profile.ssh) {
-      return setInProgress(false);
-    }
+    if (!profile) return setInProgress(false);
 
     try {
       await removeSSHKeyFromKeychain();
 
-      //!404
-      // if (profile.type === "github") {
-      //   const [algorithm, pub] = profile.ssh.split(" ");
-      //   const keys = await listSSHKeys(profile.user.accessToken);
-      //   const key = keys.find(({ key }) => key === `${algorithm} ${pub}`);
-      //   if (!key) throw new Error("No such SSH key");
-      //   await removeSSHKey(profile.user.accessToken, key.id);
-      // }
+      if (profile.type === "github" && profile.ssh) {
+        const [algorithm, pub] = profile.ssh.public.split(" ");
+        const keys = await listSSHKeys(profile.user.accessToken);
+        const key = keys.find(({ key }) => key === `${algorithm} ${pub}`);
+        if (!key) throw new Error("No such SSH key");
+        await removeSSHKey(profile.user.accessToken, key.id);
+      }
 
-      setSSHKey(profile.user.id, false);
+      unsetSSHKey(userId);
 
-      onClose();
+      if (onClose) onClose();
       toast.dismiss(toastId);
     } catch (error) {
       console.error(error);
@@ -72,11 +70,13 @@ export const RemoveSSHNotification = ({ toastId, id, onClose }: Props) => {
   const { T } = useT();
 
   return (
-    <GenericActionNotificationBody
-      title={T("notifications.ssh.remove.title")}
-      description={T("notifications.ssh.remove.description")}
-    >
-      <SSHActionButton onClick={onClick} inProgress={inProgress} />
-    </GenericActionNotificationBody>
+    <BaseNotificationBody>
+      <GenericActionNotificationContent
+        title={T("notifications.ssh.remove.title")}
+        description={T("notifications.ssh.remove.description")}
+      >
+        <SSHActionButton onClick={onClick} inProgress={inProgress} />
+      </GenericActionNotificationContent>
+    </BaseNotificationBody>
   );
 };

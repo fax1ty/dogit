@@ -9,10 +9,12 @@ import { Focuser } from "./managers/focuser";
 import { NoContext } from "./managers/no-context";
 import { Notifications } from "./managers/notifications";
 import { Resizer } from "./managers/resizer";
+import { Syncronizer } from "./managers/syncronizer";
 
 export const App = () => {
   return (
     <Talkr languages={{ ru, en }} defaultLanguage="en" detectBrowserLanguage>
+      <Syncronizer />
       <DeepLinks />
       <Resizer />
       <NoContext />

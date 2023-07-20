@@ -4,6 +4,7 @@ import useSWR from "swr";
 
 import { GithubProfile, GithubUser, usePersistStore } from "../store/persist";
 import { setAutosign, setEmail, setName, setSigningKey } from "./git";
+import { addSSHKeyPair, startSSHAgent } from "./ssh";
 
 const fetcher = axios.create({
   baseURL: "https://api.github.com",
@@ -61,15 +62,18 @@ export const useGithubProfile = (
         await setSigningKey(profile.gpg);
         await setAutosign(true);
       } else {
-        //! code 5
-        // await removeSigningKey();
         await setAutosign(false);
+      }
+
+      if (profile.ssh) {
+        await addSSHKeyPair(profile.ssh.private);
+        await startSSHAgent();
       }
 
       finishSync(id);
       return data;
     },
-    { refreshWhenHidden: true, refreshInterval: 5 * 60 * 1000 }
+    { revalidateOnFocus: false, revalidateOnMount: false }
   );
 };
 
@@ -136,7 +140,7 @@ export const removeGPGKey = (
   accessToken: GithubProfile["user"]["accessToken"],
   id: GithubGPGKeyResponse["id"]
 ) =>
-  axios.delete(`/user/gpg_keys/${id}`, {
+  fetcher.delete(`/user/gpg_keys/${id}`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
@@ -179,9 +183,9 @@ export const listSSHKeys = async (
 
 export const removeSSHKey = async (
   accessToken: GithubProfile["user"]["accessToken"],
-  idx: GitHubSSHKeyResponse["id"]
+  id: GitHubSSHKeyResponse["id"]
 ) =>
-  fetcher.delete<GitHubSSHKeyResponse[]>(`/user/keys/${idx}`, {
+  fetcher.delete(`/user/keys/${id}`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },

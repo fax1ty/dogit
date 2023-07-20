@@ -7,7 +7,7 @@ import { useAppStore } from "../../store/app";
 import { BaseNotificationBody } from "../base";
 import classes from "./styles.module.scss";
 
-const CloseNotificationBody = () => {
+const CloseNotificationContent = () => {
   const { T } = useT();
 
   return (
@@ -32,7 +32,7 @@ export const CloseNotification = () => {
         }, 350);
       }}
     >
-      <CloseNotificationBody />
+      <CloseNotificationContent />
     </BaseNotificationBody>
   );
 };

@@ -11,15 +11,17 @@ import { ProfileCard } from "./profile";
 import classes from "./styles.module.scss";
 
 const Background = () => {
-  const profiles = usePersistStore((state) => state.profiles);
+  const selectedId = usePersistStore((state) => state.selectedId);
   const colors = useMemo<Profile["colors"]>(
     () =>
-      profiles.find(({ selected }) => selected)?.colors || [
+      usePersistStore
+        .getState()
+        .profiles.find(({ user: { id } }) => selectedId === id)?.colors || [
         "#000AFF",
         "#DB00FF",
         "#00A3FF",
       ],
-    [profiles]
+    [selectedId]
   );
 
   return (
@@ -89,7 +91,7 @@ const Slides = () => {
   );
 };
 
-const ManagerNotificationBody = () => {
+const ManagerNotificationContent = () => {
   return (
     <div className={classes.content}>
       <Background />
@@ -101,7 +103,7 @@ const ManagerNotificationBody = () => {
 export const ManagerNotification = () => {
   return (
     <BaseNotificationBody contentClassName={classes.body}>
-      <ManagerNotificationBody />
+      <ManagerNotificationContent />
     </BaseNotificationBody>
   );
 };

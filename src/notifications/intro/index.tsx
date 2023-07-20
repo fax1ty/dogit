@@ -1,11 +1,14 @@
 import { open } from "@tauri-apps/api/shell";
+import { logEvent } from "firebase/analytics";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useT } from "talkr";
 
 import { isGitAvailable } from "../../api/git";
 import { ActionButton } from "../../components/buttons/action";
-import { GenericActionNotificationBody } from "../action";
+import { analytics } from "../../main";
+import { GenericActionNotificationContent } from "../action";
+import { BaseNotificationBody } from "../base";
 import { GenericErrorNotification } from "../error";
 import { ImportNotification } from "../import";
 
@@ -26,7 +29,7 @@ const IntroActionButton = () => {
           if (!canDoGit)
             toast((t) => (
               <GenericErrorNotification
-                id={t.id}
+                toastId={t.id}
                 title={T("errors.git_not_available.title")}
                 description={T("errors.git_not_available.description")}
                 actionText={T("errors.git_not_available.action_text")}
@@ -36,6 +39,7 @@ const IntroActionButton = () => {
           else {
             toast(<ImportNotification />, { id: "import" });
             setImportOpen(true);
+            logEvent(analytics, "intro_passed");
           }
         }
       }}
@@ -51,11 +55,13 @@ export const IntroNotification = () => {
   const { T } = useT();
 
   return (
-    <GenericActionNotificationBody
-      title={T("notifications.intro.title")}
-      description={T("notifications.intro.description")}
-    >
-      <IntroActionButton />
-    </GenericActionNotificationBody>
+    <BaseNotificationBody>
+      <GenericActionNotificationContent
+        title={T("notifications.intro.title")}
+        description={T("notifications.intro.description")}
+      >
+        <IntroActionButton />
+      </GenericActionNotificationContent>
+    </BaseNotificationBody>
   );
 };

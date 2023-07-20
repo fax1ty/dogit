@@ -9,7 +9,7 @@ interface BaseProfile<
   selected: boolean;
   colors: [string, string, string];
   gpg: string | false;
-  ssh: string | false;
+  ssh: { private: string; public: string } | false;
   remote: R;
   user: U;
   type: T;
@@ -58,6 +58,7 @@ type GetProfileType<T extends Profile["type"]> = ProfileTypes[T];
 
 interface PersistStore {
   profiles: Profile[];
+  selectedId: Profile["user"]["id"] | null;
   addProfile: <
     T extends Profile["type"],
     P extends GetProfileType<T>,
@@ -79,7 +80,8 @@ interface PersistStore {
   startSync: (id: Profile["user"]["id"]) => void;
   finishSync: (id: Profile["user"]["id"]) => void;
   setGPGKey: (id: Profile["user"]["id"], secretId: string | false) => void;
-  setSSHKey: (id: Profile["user"]["id"], pub: string | false) => void;
+  setSSHKey: (id: Profile["user"]["id"], pub: string, priv: string) => void;
+  unsetSSHKey: (id: Profile["user"]["id"]) => void;
   skippedVersions: string[];
   skipVersion: (v: string) => void;
 }
@@ -104,6 +106,7 @@ export const usePersistStore = create(
       lastVersion: null,
       setLastVersion: (v) => set({ lastVersion: v }),
       profiles: [],
+      selectedId: null,
       addProfile: (type, user) => {
         const userAlreadyExist = get().profiles.find(
           ({ user: { id } }) => id === user.id
@@ -142,7 +145,7 @@ export const usePersistStore = create(
           const profile = profiles[i];
           profile.selected = true;
 
-          return { profiles };
+          return { profiles, selectedId: profile.user.id };
         }),
       updateProfileUser: (id, mutation) =>
         set((old) => {
@@ -161,11 +164,18 @@ export const usePersistStore = create(
           profiles[idx].gpg = secretId;
           return { profiles };
         }),
-      setSSHKey: (id, pub) =>
+      setSSHKey: (id, pub, secret) =>
         set((old) => {
           const profiles = [...old.profiles];
           const idx = profiles.findIndex(({ user }) => user.id === id);
-          profiles[idx].ssh = pub;
+          profiles[idx].ssh = { public: pub, private: secret };
+          return { profiles };
+        }),
+      unsetSSHKey: (id) =>
+        set((old) => {
+          const profiles = [...old.profiles];
+          const idx = profiles.findIndex(({ user }) => user.id === id);
+          profiles[idx].ssh = false;
           return { profiles };
         }),
       startSync: (id) =>
@@ -187,6 +197,12 @@ export const usePersistStore = create(
       skipVersion: (v) =>
         set((old) => ({ skippedVersions: [...old.skippedVersions, v] })),
     }),
-    { name: "persist-store", version: 5 }
+    { name: "persist-store", version: 6 }
   )
 );
+
+export const getProfileById = (id: Profile["user"]["id"]) => {
+  const profiles = usePersistStore.getState().profiles;
+  const profile = profiles.find(({ user }) => id === user.id);
+  return profile;
+};

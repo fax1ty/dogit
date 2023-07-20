@@ -10,7 +10,8 @@ import {
   ActionButtonProps,
 } from "../../components/buttons/action";
 import { usePersistStore } from "../../store/persist";
-import { GenericActionNotificationBody } from "../action";
+import { GenericActionNotificationContent } from "../action";
+import { BaseNotificationBody } from "../base";
 
 interface Props {
   version: string;
@@ -56,12 +57,14 @@ export const UpdaterNotification = ({ version, toastId }: Props) => {
   const { T } = useT();
 
   return (
-    <GenericActionNotificationBody
-      title={T("notifications.updater.title")}
-      description={T("notifications.updater.description", { version })}
-    >
-      <InstallActionButton onClick={onClick} loading={inProgress} />
-      <SkipActionButton onClick={onSkip} disabled={inProgress} />
-    </GenericActionNotificationBody>
+    <BaseNotificationBody>
+      <GenericActionNotificationContent
+        title={T("notifications.updater.title")}
+        description={T("notifications.updater.description", { version })}
+      >
+        <InstallActionButton onClick={onClick} loading={inProgress} />
+        <SkipActionButton onClick={onSkip} disabled={inProgress} />
+      </GenericActionNotificationContent>
+    </BaseNotificationBody>
   );
 };

@@ -3,6 +3,7 @@ import useSWR from "swr";
 
 import { LocalProfile, usePersistStore } from "../store/persist";
 import { executeBase } from "./execute";
+import { addSSHKeyPair, startSSHAgent } from "./ssh";
 
 const execute = (args?: string | string[]) => executeBase("git", args);
 
@@ -67,14 +68,17 @@ export const useLocalProfile = () => {
         await setSigningKey(profile.gpg);
         await setAutosign(true);
       } else {
-        //! code 5
-        // await removeSigningKey();
         await setAutosign(false);
+      }
+
+      if (profile.ssh) {
+        await addSSHKeyPair(profile.ssh.private);
+        await startSSHAgent();
       }
 
       finishSync("local");
       return profile;
     },
-    { refreshWhenHidden: true, refreshInterval: 5 * 60 * 1000 }
+    { revalidateOnFocus: false, revalidateOnMount: false }
   );
 };

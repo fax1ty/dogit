@@ -17,6 +17,16 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: rgba(white, 0.4);
+      }
+
+      &.active,
+      &:active {
+        background-color: rgba(white, 0.5);
+      }
     }
   }
 
@@ -29,7 +39,7 @@
       border: none;
       min-width: 15px;
       color: white;
-      font-family: Roboto, sans-serif;
+      font-family: Roboto;
 
       &:disabled {
         cursor: default;
@@ -58,7 +68,7 @@
         .text {
           font-weight: 700;
           font-size: 14px;
-          font-family: Roboto, sans-serif;
+          font-family: Roboto;
           line-height: 100%;
         }
 
@@ -79,7 +89,7 @@
       .email {
         font-weight: 400;
         font-size: 12px;
-        font-family: Roboto, sans-serif;
+        font-family: Roboto;
         line-height: 50%;
       }
     }

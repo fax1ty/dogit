@@ -9,11 +9,12 @@ import {
   startSSHAgent,
 } from "../../api/ssh";
 import { ActionButton } from "../../components/buttons/action";
-import { Profile, usePersistStore } from "../../store/persist";
-import { GenericActionNotificationBody } from "../action";
+import { getProfileById, Profile, usePersistStore } from "../../store/persist";
+import { GenericActionNotificationContent } from "../action";
+import { BaseNotificationBody } from "../base";
 
 interface Props {
-  id: Profile["user"]["id"];
+  userId: Profile["user"]["id"];
   toastId: string;
   onClose: () => void;
 }
@@ -36,7 +37,7 @@ const SSHActionButton = ({
   );
 };
 
-export const AddSSHNotification = ({ toastId, id, onClose }: Props) => {
+export const AddSSHNotification = ({ toastId, userId, onClose }: Props) => {
   const [inProgress, setInProgress] = useState(false);
 
   const setSSHKey = usePersistStore((state) => state.setSSHKey);
@@ -44,12 +45,9 @@ export const AddSSHNotification = ({ toastId, id, onClose }: Props) => {
   const onClick = async () => {
     setInProgress(true);
 
-    const profiles = usePersistStore.getState().profiles;
-    const profile = profiles.find(({ user }) => id === user.id);
+    const profile = getProfileById(userId);
 
-    if (!profile) {
-      return setInProgress(false);
-    }
+    if (!profile) return setInProgress(false);
 
     try {
       const { public_key, private_key } = await generateSSHKeyPair(
@@ -60,7 +58,7 @@ export const AddSSHNotification = ({ toastId, id, onClose }: Props) => {
       if (profile.type === "github")
         await addSSHKey(profile.user.accessToken, public_key);
 
-      setSSHKey(profile.user.id, public_key);
+      setSSHKey(profile.user.id, public_key, private_key);
 
       onClose();
       toast.dismiss(toastId);
@@ -74,11 +72,13 @@ export const AddSSHNotification = ({ toastId, id, onClose }: Props) => {
   const { T } = useT();
 
   return (
-    <GenericActionNotificationBody
-      title={T("notifications.ssh.add.title")}
-      description={T("notifications.ssh.add.description")}
-    >
-      <SSHActionButton onClick={onClick} inProgress={inProgress} />
-    </GenericActionNotificationBody>
+    <BaseNotificationBody>
+      <GenericActionNotificationContent
+        title={T("notifications.ssh.add.title")}
+        description={T("notifications.ssh.add.description")}
+      >
+        <SSHActionButton onClick={onClick} inProgress={inProgress} />
+      </GenericActionNotificationContent>
+    </BaseNotificationBody>
   );
 };

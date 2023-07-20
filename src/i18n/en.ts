@@ -26,6 +26,10 @@ export const en = {
           default: "Delete",
         },
       },
+      manage: {
+        copy: "Copy",
+        remove: "Remove",
+      },
     },
     import: {
       buttons: {
@@ -93,6 +97,10 @@ export const en = {
           default: "Delete",
         },
       },
+      manage: {
+        copy: "Copy",
+        remove: "Remove",
+      },
     },
     update: {
       title: "Dogit has been updated",
@@ -128,6 +136,29 @@ export const en = {
       description:
         "It appears that SSH is not installed on your system. If you continue to encounter this error and the ssh command is still available, please create an issue.",
       action_text: "Install SSH",
+    },
+    generic: {
+      title: "Error",
+      description:
+        "It seems like a technical error has occurred. However, is a minor issue. It's just one of those things that happen sometimes ¯\\_(ツ)_/¯",
+      action_text: "Close",
+    },
+    gpg_add_unknown_error:
+      "Could not generate a GPG key due to an unknown error",
+  },
+  info: {
+    generic: {
+      title: "Notification",
+      action_text: "Okay",
+    },
+    gpg_copied: {
+      title: "Copied",
+      description:
+        "The public key of the GPG signature was copied to the clipboard",
+    },
+    ssh_copied: {
+      title: "Copied",
+      description: "The SSH public key was copied to the clipboard",
     },
   },
 };

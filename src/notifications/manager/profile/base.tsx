@@ -27,8 +27,10 @@ import { useAppStore } from "../../../store/app";
 import { Profile, usePersistStore } from "../../../store/persist";
 import { GenericErrorNotification } from "../../error";
 import { AddGPGNotification } from "../../gpg/add";
+import { ManageGPGNotification } from "../../gpg/manage";
 import { RemoveGPGNotification } from "../../gpg/remove";
 import { AddSSHNotification } from "../../ssh/add";
+import { ManageSSHNotification } from "../../ssh/manage";
 import { RemoveSSHNotification } from "../../ssh/remove";
 import { BaseCard, BaseCardProps } from "../card";
 import { ManageUserNotification } from "../manage";
@@ -74,11 +76,13 @@ export const BaseProfile = ({
   const hideGPGNotifications = () => {
     toast.dismiss("add-gpg");
     toast.dismiss("remove-gpg");
+    toast.dismiss("manage-gpg");
     setGPGOpen(false);
   };
   const hideSSHNotifications = () => {
     toast.dismiss("add-ssh");
     toast.dismiss("remove-ssh");
+    toast.dismiss("manage-ssh");
     setSSHOpen(false);
   };
   const hideManageNotification = () => {
@@ -102,17 +106,16 @@ export const BaseProfile = ({
   const { T } = useT();
 
   const manage = () => {
+    if (isGPGOpen) hideGPGNotifications();
+    if (isSSHOpen) hideSSHNotifications();
+
     if (isManageOpen) hideManageNotification();
     else {
       toast(
         (t) => (
           <ManageUserNotification
             toastId={t.id}
-            id={id}
-            email={email}
-            gpg={gpg}
-            ssh={ssh}
-            type={type}
+            userId={id}
             onClose={() => setManageOpen(false)}
           />
         ),
@@ -140,7 +143,14 @@ export const BaseProfile = ({
             onClick={manage}
           />
         ) : (
-          <div className={clsx(classes.avatar, classes.fake)} onClick={manage}>
+          <div
+            className={clsx(
+              classes.avatar,
+              classes.fake,
+              isManageOpen && classes.active
+            )}
+            onClick={manage}
+          >
             <User weight="fill" color="white" size={24} />
           </div>
         )}
@@ -152,25 +162,40 @@ export const BaseProfile = ({
               button
               onClick={async () => {
                 if (isGPGOpen) return hideGPGNotifications();
+                if (isSSHOpen) hideSSHNotifications();
+                if (isManageOpen) hideManageNotification();
 
                 if (gpg) {
-                  toast(
-                    (t) => (
-                      <RemoveGPGNotification
-                        id={id}
-                        toastId={t.id}
-                        onClose={() => setGPGOpen(false)}
-                      />
-                    ),
-                    { id: "remove-gpg" }
-                  );
+                  if (type === "local")
+                    toast(
+                      (t) => (
+                        <ManageGPGNotification
+                          id={id}
+                          toastId={t.id}
+                          email={email}
+                          onClose={() => setGPGOpen(false)}
+                        />
+                      ),
+                      { id: "manage-gpg" }
+                    );
+                  else
+                    toast(
+                      (t) => (
+                        <RemoveGPGNotification
+                          userId={id}
+                          toastId={t.id}
+                          onClose={() => setGPGOpen(false)}
+                        />
+                      ),
+                      { id: "remove-gpg" }
+                    );
                   setGPGOpen(true);
                 } else {
                   const canDoGPG = await isGPGAvailable();
                   if (!canDoGPG)
                     toast((t) => (
                       <GenericErrorNotification
-                        id={t.id}
+                        toastId={t.id}
                         title={T("errors.gpg_not_available.title")}
                         description={T("errors.gpg_not_available.description")}
                         actionText={T("errors.gpg_not_available.action_text")}
@@ -183,7 +208,7 @@ export const BaseProfile = ({
                     toast(
                       (t) => (
                         <AddGPGNotification
-                          id={id}
+                          userId={id}
                           toastId={t.id}
                           onClose={() => setGPGOpen(false)}
                         />
@@ -206,25 +231,39 @@ export const BaseProfile = ({
               button
               onClick={async () => {
                 if (isSSHOpen) return hideSSHNotifications();
+                if (isGPGOpen) hideGPGNotifications();
+                if (isManageOpen) hideManageNotification();
 
                 if (ssh) {
-                  toast(
-                    (t) => (
-                      <RemoveSSHNotification
-                        id={id}
-                        toastId={t.id}
-                        onClose={() => setSSHOpen(false)}
-                      />
-                    ),
-                    { id: "remove-ssh" }
-                  );
+                  if (type === "local")
+                    toast(
+                      (t) => (
+                        <ManageSSHNotification
+                          userId={id}
+                          toastId={t.id}
+                          onClose={() => setSSHOpen(false)}
+                        />
+                      ),
+                      { id: "manage-ssh" }
+                    );
+                  else
+                    toast(
+                      (t) => (
+                        <RemoveSSHNotification
+                          userId={id}
+                          toastId={t.id}
+                          onClose={() => setSSHOpen(false)}
+                        />
+                      ),
+                      { id: "remove-ssh" }
+                    );
                   setSSHOpen(true);
                 } else {
                   const canDoSSH = await isSSHAvailable();
                   if (!canDoSSH)
                     toast((t) => (
                       <GenericErrorNotification
-                        id={t.id}
+                        toastId={t.id}
                         title={T("errors.ssh_not_available.title")}
                         description={T("errors.ssh_not_available.description")}
                         actionText={T("errors.ssh_not_available.action_text")}
@@ -239,7 +278,7 @@ export const BaseProfile = ({
                     toast(
                       (t) => (
                         <AddSSHNotification
-                          id={id}
+                          userId={id}
                           toastId={t.id}
                           onClose={() => setSSHOpen(false)}
                         />
@@ -268,6 +307,7 @@ export const BaseProfile = ({
           <div className={classes.info}>
             <div className={classes.name}>
               <AutosizeInput
+                inputStyle={{ fontSize: 14 }}
                 placeholder={T(
                   "notifications.manager.profile.placeholders.name"
                 )}
@@ -321,6 +361,7 @@ export const BaseProfile = ({
               </Bubble>
             </div>
             <AutosizeInput
+              inputStyle={{ fontSize: 12 }}
               placeholder={T(
                 "notifications.manager.profile.placeholders.email"
               )}

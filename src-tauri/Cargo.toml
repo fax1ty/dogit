@@ -1,6 +1,6 @@
 [package]
 name = "dogit"
-version = "0.0.8"
+version = "0.0.9"
 description = "Dogit"
 authors = ["Artemiy Davydov"]
 license = "MIT"
@@ -14,6 +14,7 @@ tauri-build = { version = "1.4", features = [] }
 
 [dependencies]
 tauri = { version = "1.4", features = [
+    "clipboard-write-text",
     "updater",
     "process-relaunch",
     "window-set-focus",

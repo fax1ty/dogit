@@ -21,7 +21,6 @@ export const Notifications = () => {
 
   const skippedVersions = usePersistStore((state) => state.skippedVersions);
 
-  const profiles = usePersistStore((state) => state.profiles);
   const lastVersion = usePersistStore((state) => state.lastVersion);
   const setLastVersion = usePersistStore((state) => state.setLastVersion);
   const isFirstTime = usePersistStore((state) => state.isFirstTime);
@@ -59,6 +58,8 @@ export const Notifications = () => {
         console.error(error);
       }
     }
+
+    const profiles = usePersistStore.getState().profiles;
 
     if (isFirstTime && !profiles.length) {
       toast(<IntroNotification />, { id: "intro" });

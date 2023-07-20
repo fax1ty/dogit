@@ -4,6 +4,7 @@ import {
   // GitlabLogoSimple,
 } from "@phosphor-icons/react";
 import { open } from "@tauri-apps/api/shell";
+import { logEvent } from "firebase/analytics";
 import { createElement, useMemo } from "react";
 import { useT } from "talkr";
 
@@ -11,6 +12,7 @@ import { getGitEmail, getGitName } from "../../api/git";
 import { Button } from "../../components/buttons/default";
 import { Typography } from "../../components/typography";
 import { useVirtualScroll } from "../../hooks/scrollbar";
+import { analytics } from "../../main";
 import { useAppStore } from "../../store/app";
 import { usePersistStore } from "../../store/persist";
 import { BaseNotificationBody } from "../base";
@@ -20,7 +22,7 @@ interface Props {
   onClose?: () => void;
 }
 
-const ImportNotificationBody = ({ onClose }: Props) => {
+const ImportNotificationContent = ({ onClose }: Props) => {
   const { T } = useT();
 
   // const isGitlabImportInProgress = useAppStore(
@@ -85,9 +87,11 @@ const ImportNotificationBody = ({ onClose }: Props) => {
 
     return buttons;
   }, [
-    profiles,
+    T,
     isGithubImportInProgress,
-    // isGitlabImportInProgress
+    profiles,
+    setGithubImportInProgress,
+    addProfile,
   ]);
 
   const [scrollable, handle, bar] = useVirtualScroll();
@@ -105,6 +109,7 @@ const ImportNotificationBody = ({ onClose }: Props) => {
             key={i}
             onClick={() => {
               onClick();
+              logEvent(analytics, "profile_imported");
               if (onClose) onClose();
             }}
             loading={loading}
@@ -126,7 +131,7 @@ const ImportNotificationBody = ({ onClose }: Props) => {
 export const ImportNotification = (props: Props) => {
   return (
     <BaseNotificationBody>
-      <ImportNotificationBody {...props} />
+      <ImportNotificationContent {...props} />
     </BaseNotificationBody>
   );
 };

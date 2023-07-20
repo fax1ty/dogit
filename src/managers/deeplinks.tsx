@@ -42,7 +42,6 @@ export const DeepLinks = () => {
       const accessToken = query.get("accessToken");
       const refreshToken = query.get("refreshToken");
       if (!accessToken || !refreshToken) return;
-      console.log(accessToken, refreshToken);
       setGitlabImportInProgress(false);
     }
   });

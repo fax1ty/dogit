@@ -1,4 +1,4 @@
-import { Event, EventName, listen } from "@tauri-apps/api/event";
+import { type Event, type EventName, listen } from "@tauri-apps/api/event";
 import { useEffect } from "react";
 
 export const useTauriEvent = <T>(
@@ -8,7 +8,7 @@ export const useTauriEvent = <T>(
 ) => {
   useEffect(() => {
     let unsubscribe: (() => void) | null = null;
-    listen<T>(event, (data) => {
+    void listen<T>(event, (data) => {
       cb(data);
     }).then((fn) => (unsubscribe = fn));
     return () => {
@@ -18,8 +18,10 @@ export const useTauriEvent = <T>(
   }, [cb, clear, event]);
 };
 
-export const useTauriFocus = (cb: () => void, clear?: () => void) =>
+export const useTauriFocus = (cb: () => void, clear?: () => void) => {
   useTauriEvent("tauri://focus", cb, clear);
+};
 
-export const useTauriBlur = (cb: () => void, clear?: () => void) =>
+export const useTauriBlur = (cb: () => void, clear?: () => void) => {
   useTauriEvent("tauri://blur", cb, clear);
+};

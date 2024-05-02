@@ -1,0 +1,63 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Capability for the main window",
+  "windows": ["main"],
+  "permissions": [
+    "path:default",
+    "event:default",
+    "window:default",
+    "window:allow-set-position",
+    "window:allow-set-focus",
+    "window:allow-hide",
+    "app:default",
+    "image:default",
+    "resources:default",
+    "menu:default",
+    "tray:default",
+    "shell:allow-open",
+    "autostart:default",
+    "autostart:allow-enable",
+    "clipboard-manager:default",
+    "deep-link:default",
+    "deep-link:allow-get-current",
+    "process:default",
+    "shell:default",
+    "updater:default",
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [
+        {
+          "name": "git",
+          "cmd": "git",
+          "args": true,
+          "sidecar": false
+        },
+        {
+          "name": "gpg",
+          "cmd": "gpg",
+          "args": true,
+          "sidecar": false
+        },
+        {
+          "name": "ssh",
+          "cmd": "ssh",
+          "args": true,
+          "sidecar": false
+        },
+        {
+          "name": "ssh-keygen",
+          "cmd": "ssh-keygen",
+          "args": true,
+          "sidecar": false
+        },
+        {
+          "name": "cmd.exe",
+          "cmd": "cmd.exe",
+          "args": true,
+          "sidecar": false
+        }
+      ]
+    }
+  ]
+}

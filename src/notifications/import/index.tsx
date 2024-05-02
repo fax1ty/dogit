@@ -3,18 +3,19 @@ import {
   GithubLogo,
   // GitlabLogoSimple,
 } from "@phosphor-icons/react";
-import { open } from "@tauri-apps/api/shell";
+import { open } from "@tauri-apps/plugin-shell";
 import { logEvent } from "firebase/analytics";
 import { createElement, useMemo } from "react";
 import { useT } from "talkr";
 
-import { getGitEmail, getGitName } from "../../api/git";
-import { Button } from "../../components/buttons/default";
-import { Typography } from "../../components/typography";
-import { useVirtualScroll } from "../../hooks/scrollbar";
-import { analytics } from "../../main";
-import { useAppStore } from "../../store/app";
-import { usePersistStore } from "../../store/persist";
+import { analytics } from "@/analytics";
+import { getGitEmail, getGitName } from "@/api/git";
+import { Button } from "@/components/buttons/default";
+import { Typography } from "@/components/typography";
+import { useVirtualScroll } from "@/hooks/scrollbar";
+import { useAppStore } from "@/store/app";
+import { usePersistStore } from "@/store/persist";
+
 import { BaseNotificationBody } from "../base";
 import classes from "./styles.module.scss";
 
@@ -76,12 +77,13 @@ const ImportNotificationContent = ({ onClose }: Props) => {
     buttons.push({
       title: T("notifications.import.buttons.local"),
       icon: FloppyDiskBack,
-      onClick: async () =>
+      onClick: async () => {
         addProfile("local", {
           id: "local",
           name: await getGitName(),
           email: await getGitEmail(),
-        }),
+        });
+      },
       disabled: localProfileExist,
     });
 
@@ -107,8 +109,8 @@ const ImportNotificationContent = ({ onClose }: Props) => {
         {buttons.map(({ title, icon, loading, onClick, disabled }, i) => (
           <Button
             key={i}
-            onClick={() => {
-              onClick();
+            onClick={async () => {
+              await onClick();
               logEvent(analytics, "profile_imported");
               if (onClose) onClose();
             }}

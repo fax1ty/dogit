@@ -1,9 +1,10 @@
 import { CaretLeft, CaretRight } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { HTMLAttributes } from "react";
+import { type HTMLAttributes } from "react";
 import { mergeRefs } from "react-merge-refs";
 
-import { useArrowNavigation, useWheelNavigation } from "../../hooks/navigation";
+import { useArrowNavigation, useWheelNavigation } from "@/hooks/navigation";
+
 import classes from "./styles.module.scss";
 
 export interface BaseCardProps {

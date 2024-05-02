@@ -1,99 +1,45 @@
 {
-  "$schema": "../node_modules/@tauri-apps/cli/schema.json",
+  "productName": "dogit",
+  "version": "0.1.0",
+  "identifier": "tt.dogi.app",
   "build": {
-    "beforeDevCommand": "yarn dev",
-    "beforeBuildCommand": "yarn build",
-    "devPath": "http://localhost:1420",
-    "distDir": "../dist",
-    "withGlobalTauri": false
+    "beforeDevCommand": "bun run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "bun run build",
+    "frontendDist": "../dist"
   },
-  "package": {
-    "productName": "dogit",
-    "version": "0.0.9"
-  },
-  "tauri": {
-    "allowlist": {
-      "all": false,
-      "window": {
-        "all": false,
-        "hide": true,
-        "setSize": true,
-        "setPosition": true,
-        "setFocus": true
-      },
-      "shell": {
-        "scope": [
-          {
-            "name": "git",
-            "cmd": "git",
-            "args": true
-          },
-          {
-            "name": "gpg",
-            "cmd": "gpg",
-            "args": true
-          },
-          {
-            "name": "ssh",
-            "cmd": "ssh",
-            "args": true
-          },
-          {
-            "name": "ssh-keygen",
-            "cmd": "ssh-keygen",
-            "args": true
-          },
-          {
-            "name": "cmd.exe",
-            "cmd": "cmd.exe",
-            "args": true
-          }
-        ],
-        "all": false,
-        "execute": true,
-        "open": true
-      },
-      "process": {
-        "all": false,
-        "relaunch": true
-      },
-      "clipboard": {
-        "all": false,
-        "writeText": true
-      }
-    },
-    "bundle": {
-      "active": true,
-      "targets": "all",
-      "identifier": "tt.dogi.app",
-      "icon": [
-        "icons/32x32.png",
-        "icons/128x128.png",
-        "icons/128x128@2x.png",
-        "icons/icon.icns",
-        "icons/icon.ico"
-      ]
-    },
-    "security": {
-      "csp": null
-    },
+  "app": {
     "windows": [
       {
+        "title": "Dogit",
         "transparent": true,
         "skipTaskbar": true,
         "focus": false,
         "alwaysOnTop": true,
         "resizable": false,
         "decorations": false,
+        "shadow": false,
         "visible": false,
         "width": 440,
         "height": 460
       }
     ],
-    "systemTray": {
-      "iconPath": "icons/icon.png",
-      "iconAsTemplate": true
-    },
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  },
+  "plugins": {
     "updater": {
       "active": true,
       "endpoints": [
@@ -101,6 +47,12 @@
       ],
       "dialog": false,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDg0REQyNTZGMEUzMEUzQjAKUldTdzR6QU9ieVhkaEJhc2lpbFRGK1hUQUlScUJaSFQ0RDRTZnROb2Y0NzJuRVVkQ1MyUThSc2wK"
+    },
+    "deep-link": {
+      "mobile": [],
+      "desktop": {
+        "schemes": ["dogit"]
+      }
     }
   }
 }

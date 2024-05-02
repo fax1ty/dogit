@@ -2,11 +2,12 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useT } from "talkr";
 
-import { removeSigningKey, setAutosign } from "../../api/git";
-import { listGPGKeys, removeGPGKey } from "../../api/github";
-import { deleteGPGKey } from "../../api/gpg";
-import { ActionButton } from "../../components/buttons/action";
-import { getProfileById, Profile, usePersistStore } from "../../store/persist";
+import { removeSigningKey, setAutosign } from "@/api/git";
+import { listGPGKeys, removeGPGKey } from "@/api/github";
+import { deleteGPGKey } from "@/api/gpg";
+import { ActionButton } from "@/components/buttons/action";
+import { getProfileById, type Profile, usePersistStore } from "@/store/persist";
+
 import { GenericActionNotificationContent } from "../action";
 import { BaseNotificationBody } from "../base";
 
@@ -44,7 +45,10 @@ export const RemoveGPGNotification = ({ toastId, userId, onClose }: Props) => {
 
     const profile = getProfileById(userId);
 
-    if (!profile) return setInProgress(false);
+    if (!profile) {
+      setInProgress(false);
+      return;
+    }
 
     try {
       await removeSigningKey();

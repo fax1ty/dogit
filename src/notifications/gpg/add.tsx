@@ -2,11 +2,12 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useT } from "talkr";
 
-import { setAutosign, setSigningKey } from "../../api/git";
-import { addGPGKey } from "../../api/github";
-import { exportArmoredPubKey, generateGPGKey } from "../../api/gpg";
-import { ActionButton } from "../../components/buttons/action";
-import { getProfileById, Profile, usePersistStore } from "../../store/persist";
+import { setAutosign, setSigningKey } from "@/api/git";
+import { addGPGKey } from "@/api/github";
+import { exportArmoredPubKey, generateGPGKey } from "@/api/gpg";
+import { ActionButton } from "@/components/buttons/action";
+import { getProfileById, type Profile, usePersistStore } from "@/store/persist";
+
 import { GenericActionNotificationContent } from "../action";
 import { BaseNotificationBody } from "../base";
 import { GenericErrorNotification } from "../error";
@@ -45,7 +46,10 @@ export const AddGPGNotification = ({ toastId, userId, onClose }: Props) => {
 
     const profile = getProfileById(userId);
 
-    if (!profile) return setInProgress(false);
+    if (!profile) {
+      setInProgress(false);
+      return;
+    }
 
     try {
       const secretId = await generateGPGKey(
@@ -68,7 +72,7 @@ export const AddGPGNotification = ({ toastId, userId, onClose }: Props) => {
           description={
             error instanceof Object &&
             "message" in error &&
-            typeof error["message"] === "string"
+            typeof error.message === "string"
               ? error.message
               : T("errors.gpg_add_unknown_error")
           }

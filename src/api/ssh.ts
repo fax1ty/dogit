@@ -1,8 +1,8 @@
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 
 import { executeBase } from "./execute";
 
-const ssh = (args?: string | string[]) => executeBase("ssh", args);
+const ssh = async (args?: string | string[]) => await executeBase("ssh", args);
 
 export const isSSHAvailable = async () => {
   try {
@@ -22,9 +22,12 @@ export const generateSSHKeyPair = async (email: string) => {
 };
 
 export const addSSHKeyPair = async (key: string) =>
-  invoke<string>("write_ssh_key", { key });
+  await invoke<string>("write_ssh_key", { key });
 
-export const startSSHAgent = () =>
-  executeBase("cmd.exe", ["/c", "start-ssh-agent"], { encoding: "utf-8" });
+export const startSSHAgent = async () =>
+  await executeBase("cmd.exe", ["/c", "start-ssh-agent"], {
+    encoding: "utf-8",
+  });
 
-export const removeSSHKeyFromKeychain = () => invoke("remove_ssh_key");
+export const removeSSHKeyFromKeychain = async () =>
+  await invoke("remove_ssh_key");

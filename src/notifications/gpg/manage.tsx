@@ -1,12 +1,13 @@
 import { Clipboard, Trash } from "@phosphor-icons/react";
-import { clipboard } from "@tauri-apps/api";
+import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { toast } from "react-hot-toast";
 import { useT } from "talkr";
 
-import { exportArmoredPubKey } from "../../api/gpg";
-import { Button } from "../../components/buttons/default";
-import { Typography } from "../../components/typography";
-import { Profile } from "../../store/persist";
+import { exportArmoredPubKey } from "@/api/gpg";
+import { Button } from "@/components/buttons/default";
+import { Typography } from "@/components/typography";
+import { type Profile } from "@/store/persist";
+
 import { GenericListNotificationBody } from "../list";
 import { GPGCopiedNotification } from "./copied";
 import { RemoveGPGNotification } from "./remove";
@@ -31,7 +32,7 @@ export const ManageGPGNotification = ({
       <Button
         onClick={async () => {
           const gpg = await exportArmoredPubKey(email);
-          await clipboard.writeText(gpg);
+          await writeText(gpg);
           toast((t) => <GPGCopiedNotification toastId={t.id} />);
           toast.dismiss(toastId);
           if (onClose) onClose();

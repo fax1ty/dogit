@@ -3,8 +3,9 @@ import { useKeenSlider } from "keen-slider/react.es";
 import { useCallback, useEffect, useMemo } from "react";
 import { mutate } from "swr";
 
-import { Blobs } from "../../components/blobs";
-import { Profile, usePersistStore } from "../../store/persist";
+import { Blobs } from "@/components/blobs";
+import { type Profile, usePersistStore } from "@/store/persist";
+
 import { BaseNotificationBody } from "../base";
 import { AddCard } from "./add";
 import { ProfileCard } from "./profile";
@@ -16,7 +17,7 @@ const Background = () => {
     () =>
       usePersistStore
         .getState()
-        .profiles.find(({ user: { id } }) => selectedId === id)?.colors || [
+        .profiles.find(({ user: { id } }) => selectedId === id)?.colors ?? [
         "#000AFF",
         "#DB00FF",
         "#00A3FF",

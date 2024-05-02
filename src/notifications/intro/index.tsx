@@ -1,12 +1,13 @@
-import { open } from "@tauri-apps/api/shell";
+import { open } from "@tauri-apps/plugin-shell";
 import { logEvent } from "firebase/analytics";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useT } from "talkr";
 
-import { isGitAvailable } from "../../api/git";
-import { ActionButton } from "../../components/buttons/action";
-import { analytics } from "../../main";
+import { analytics } from "@/analytics";
+import { isGitAvailable } from "@/api/git";
+import { ActionButton } from "@/components/buttons/action";
+
 import { GenericActionNotificationContent } from "../action";
 import { BaseNotificationBody } from "../base";
 import { GenericErrorNotification } from "../error";
@@ -33,7 +34,9 @@ const IntroActionButton = () => {
                 title={T("errors.git_not_available.title")}
                 description={T("errors.git_not_available.description")}
                 actionText={T("errors.git_not_available.action_text")}
-                action={async () => await open("https://git-scm.com/")}
+                action={async () => {
+                  await open("https://git-scm.com/");
+                }}
               />
             ));
           else {

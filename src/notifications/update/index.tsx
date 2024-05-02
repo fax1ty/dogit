@@ -1,8 +1,9 @@
-import { open } from "@tauri-apps/api/shell";
+import { open } from "@tauri-apps/plugin-shell";
 import { useT } from "talkr";
 
-import { usePersistStore } from "../../store/persist";
-import { AutoClosableNotificationProps } from "../autoclosable";
+import { usePersistStore } from "@/store/persist";
+
+import { type AutoClosableNotificationProps } from "../autoclosable";
 import { GenericInfoNotification } from "../info";
 
 export const UpdateNotification = (props: AutoClosableNotificationProps) => {

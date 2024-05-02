@@ -2,10 +2,11 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useT } from "talkr";
 
-import { listSSHKeys, removeSSHKey } from "../../api/github";
-import { removeSSHKeyFromKeychain } from "../../api/ssh";
-import { ActionButton } from "../../components/buttons/action";
-import { getProfileById, Profile, usePersistStore } from "../../store/persist";
+import { listSSHKeys, removeSSHKey } from "@/api/github";
+import { removeSSHKeyFromKeychain } from "@/api/ssh";
+import { ActionButton } from "@/components/buttons/action";
+import { getProfileById, type Profile, usePersistStore } from "@/store/persist";
+
 import { GenericActionNotificationContent } from "../action";
 import { BaseNotificationBody } from "../base";
 
@@ -43,7 +44,10 @@ export const RemoveSSHNotification = ({ toastId, userId, onClose }: Props) => {
 
     const profile = getProfileById(userId);
 
-    if (!profile) return setInProgress(false);
+    if (!profile) {
+      setInProgress(false);
+      return;
+    }
 
     try {
       await removeSSHKeyFromKeychain();

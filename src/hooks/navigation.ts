@@ -1,7 +1,7 @@
 import throttle from "just-throttle";
 import { useEffect, useRef } from "react";
 
-import { useAppStore } from "../store/app";
+import { useAppStore } from "@/store/app";
 
 export const useArrowNavigation = <T extends HTMLElement = HTMLDivElement>(
   onPrev?: () => void,
@@ -15,7 +15,9 @@ export const useArrowNavigation = <T extends HTMLElement = HTMLDivElement>(
     const element = ref.current;
     const listener = () => (focused.current = true);
     element.addEventListener("mouseenter", listener);
-    return () => element.removeEventListener("mouseenter", listener);
+    return () => {
+      element.removeEventListener("mouseenter", listener);
+    };
   }, []);
 
   useEffect(() => {
@@ -23,7 +25,9 @@ export const useArrowNavigation = <T extends HTMLElement = HTMLDivElement>(
     const element = ref.current;
     const listener = () => (focused.current = false);
     element.addEventListener("mouseleave", listener);
-    return () => element.removeEventListener("mouseleave", listener);
+    return () => {
+      element.removeEventListener("mouseleave", listener);
+    };
   }, []);
 
   useEffect(() => {
@@ -35,7 +39,9 @@ export const useArrowNavigation = <T extends HTMLElement = HTMLDivElement>(
       if (code === "ArrowRight" && onNext) onNext();
     };
     window.addEventListener("keydown", listener);
-    return () => window.removeEventListener("keydown", listener);
+    return () => {
+      window.removeEventListener("keydown", listener);
+    };
   }, [onPrev, onNext]);
 
   return ref;
@@ -53,7 +59,9 @@ export const useWheelNavigation = <T extends HTMLElement = HTMLDivElement>(
     const element = ref.current;
     const listener = () => (focused.current = true);
     element.addEventListener("mouseenter", listener);
-    return () => element.removeEventListener("mouseenter", listener);
+    return () => {
+      element.removeEventListener("mouseenter", listener);
+    };
   }, []);
 
   useEffect(() => {
@@ -61,7 +69,9 @@ export const useWheelNavigation = <T extends HTMLElement = HTMLDivElement>(
     const element = ref.current;
     const listener = () => (focused.current = false);
     element.addEventListener("mouseleave", listener);
-    return () => element.removeEventListener("mouseleave", listener);
+    return () => {
+      element.removeEventListener("mouseleave", listener);
+    };
   }, []);
 
   useEffect(() => {
@@ -73,7 +83,9 @@ export const useWheelNavigation = <T extends HTMLElement = HTMLDivElement>(
       if (deltaY > 0 && onNext) onNext();
     }, 1000);
     window.addEventListener("wheel", listener);
-    return () => window.removeEventListener("wheel", listener);
+    return () => {
+      window.removeEventListener("wheel", listener);
+    };
   }, [onPrev, onNext]);
 
   return ref;

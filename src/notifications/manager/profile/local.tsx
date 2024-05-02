@@ -1,8 +1,9 @@
 import { useMemo } from "react";
 
-import { useLocalProfile } from "../../../api/git";
-import { LocalProfile, usePersistStore } from "../../../store/persist";
-import { BaseProfile, BaseProfileCardProps } from "./base";
+import { useLocalProfile } from "@/api/git";
+import { type LocalProfile, usePersistStore } from "@/store/persist";
+
+import { BaseProfile, type BaseProfileCardProps } from "./base";
 
 export const LocalProfileCard = ({
   onPrev,
@@ -32,8 +33,8 @@ export const LocalProfileCard = ({
       onPrev={onPrev}
       onNext={onNext}
       isFirst={isFirst}
-      name={profile?.user.name || localProfile.user.name}
-      email={profile?.user.email || localProfile.user.email}
+      name={profile?.user.name ?? localProfile.user.name}
+      email={profile?.user.email ?? localProfile.user.email}
       gpg={Boolean(gpg)}
       ssh={Boolean(ssh)}
       remote={false}

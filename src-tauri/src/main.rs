@@ -4,52 +4,54 @@
 mod commands;
 use commands::{generate_ssh_keys, remove_ssh_key, write_ssh_key};
 
-use tauri::{Manager, SystemTray, SystemTrayEvent};
+use tauri::{
+    image::Image,
+    tray::{ClickType, TrayIconBuilder},
+    Manager,
+};
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_positioner::{Position, WindowExt};
 
-fn main() {
-    tauri_plugin_deep_link::prepare("tt.dogi.app");
+#[tauri::command]
+fn greet(name: &str) -> String {
+    format!("Hello, {}! You've been greeted from Rust!", name)
+}
 
+fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_single_instance::init(|_app, _args, _cwd| {}))
+        .plugin(tauri_plugin_positioner::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_process::init())
+        .plugin(tauri_plugin_deep_link::init())
+        .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_autostart::init(
             MacosLauncher::LaunchAgent,
             Some(vec![]),
         ))
-        .plugin(tauri_plugin_positioner::init())
-        .system_tray(SystemTray::new())
+        .plugin(tauri_plugin_shell::init())
+        .invoke_handler(tauri::generate_handler![greet])
         .setup(|app| {
-            let win = app.get_window("main").unwrap();
+            let webview = app.get_webview_window("main").unwrap();
+            let win = webview.as_ref().window();
+
             win.move_window(Position::BottomRight).unwrap();
 
-            let handle = app.handle();
-            tauri_plugin_deep_link::register("dogit", move |request| {
-                handle.emit_all("scheme-request-received", request).unwrap();
-            })
-            .unwrap();
+            let icon = Image::from_bytes(include_bytes!("../icons/icon.png")).unwrap();
 
-            #[cfg(not(target_os = "macos"))]
-            if let Some(url) = std::env::args().nth(1) {
-                win.show().unwrap();
-                win.set_focus().unwrap();
-                app.emit_all("scheme-request-received", url).unwrap();
-            }
+            TrayIconBuilder::new()
+                .icon(icon)
+                .on_tray_icon_event(move |_, event| match event.click_type {
+                    ClickType::Left => {
+                        win.show().unwrap();
+                        win.set_focus().unwrap();
+                        win.emit("open", {}).unwrap();
+                    }
+                    _ => {}
+                })
+                .build(app)?;
 
             Ok(())
-        })
-        .on_system_tray_event(|app, event| match event {
-            SystemTrayEvent::LeftClick {
-                position: _,
-                size: _,
-                ..
-            } => {
-                let win = app.get_window("main").unwrap();
-
-                win.show().unwrap();
-                win.set_focus().unwrap();
-                app.emit_all("open", {}).unwrap();
-            }
-            _ => {}
         })
         .invoke_handler(tauri::generate_handler![
             generate_ssh_keys,
@@ -57,5 +59,5 @@ fn main() {
             remove_ssh_key
         ])
         .run(tauri::generate_context!())
-        .unwrap();
+        .expect("error while running tauri application");
 }

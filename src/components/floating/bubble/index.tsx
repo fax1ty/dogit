@@ -5,7 +5,7 @@ import {
   useInteractions,
   useTransitionStyles,
 } from "@floating-ui/react";
-import { HTMLAttributes, ReactNode, useState } from "react";
+import { type HTMLAttributes, type ReactNode, useState } from "react";
 
 import classes from "./styles.module.scss";
 

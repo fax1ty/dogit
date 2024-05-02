@@ -1,15 +1,16 @@
 import { FastForward } from "@phosphor-icons/react";
-import { relaunch } from "@tauri-apps/api/process";
-import { installUpdate } from "@tauri-apps/api/updater";
+import { relaunch } from "@tauri-apps/plugin-process";
+import { check as checkUpdate } from "@tauri-apps/plugin-updater";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useT } from "talkr";
 
 import {
   ActionButton,
-  ActionButtonProps,
-} from "../../components/buttons/action";
-import { usePersistStore } from "../../store/persist";
+  type ActionButtonProps,
+} from "@/components/buttons/action";
+import { usePersistStore } from "@/store/persist";
+
 import { GenericActionNotificationContent } from "../action";
 import { BaseNotificationBody } from "../base";
 
@@ -45,7 +46,8 @@ export const UpdaterNotification = ({ version, toastId }: Props) => {
 
   const onClick = async () => {
     setInProgress(true);
-    await installUpdate();
+    const update = await checkUpdate();
+    await update?.downloadAndInstall();
     await relaunch();
     setInProgress(false);
   };

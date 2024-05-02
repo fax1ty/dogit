@@ -1,12 +1,13 @@
-import { ReactElement } from "react";
+import { type ReactElement } from "react";
 
-import { ButtonProps } from "../../components/buttons/default";
+import { type ButtonProps } from "@/components/buttons/default";
+
 // import { useVirtualScroll } from "../../hooks/scrollbar";
 import { BaseNotificationBody } from "../base";
 import classes from "./styles.module.scss";
 
 interface Props {
-  children: ReactElement<ButtonProps> | ReactElement<ButtonProps>[];
+  children: ReactElement<ButtonProps> | Array<ReactElement<ButtonProps>>;
 }
 
 export const GenericListNotificationBody = ({ children }: Props) => {

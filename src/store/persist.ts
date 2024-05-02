@@ -4,7 +4,7 @@ import { persist } from "zustand/middleware";
 interface BaseProfile<
   T extends keyof ProfileTypes,
   U extends { id: string | number },
-  R extends boolean
+  R extends boolean,
 > {
   selected: boolean;
   colors: [string, string, string];
@@ -48,11 +48,11 @@ export interface LocalUser {
 
 export type LocalProfile = BaseProfile<"local", LocalUser, false>;
 
-type ProfileTypes = {
+interface ProfileTypes {
   local: LocalProfile;
   gitlab: GitlabProfile;
   github: GithubProfile;
-};
+}
 export type Profile = ProfileTypes[keyof ProfileTypes];
 type GetProfileType<T extends Profile["type"]> = ProfileTypes[T];
 
@@ -62,7 +62,7 @@ interface PersistStore {
   addProfile: <
     T extends Profile["type"],
     P extends GetProfileType<T>,
-    U extends P["user"]
+    U extends P["user"],
   >(
     t: T,
     u: U
@@ -95,16 +95,20 @@ const COLORS = [
   ["#FFC700", "#EE46D3", "#f2371f"],
   ["#00bc88", "#00ff84", "#009456"],
   ["#020710", "#1356bb", "#1a75ff"],
-];
+] as [string, string, string][];
 const randomColorSet = () => COLORS[Math.floor(Math.random() * COLORS.length)];
 
 export const usePersistStore = create(
   persist<PersistStore>(
     (set, get) => ({
       isFirstTime: true,
-      setFirstTime: (v) => set({ isFirstTime: v }),
+      setFirstTime: (v) => {
+        set({ isFirstTime: v });
+      },
       lastVersion: null,
-      setLastVersion: (v) => set({ lastVersion: v }),
+      setLastVersion: (v) => {
+        set({ lastVersion: v });
+      },
       profiles: [],
       selectedId: null,
       addProfile: (type, user) => {
@@ -119,24 +123,25 @@ export const usePersistStore = create(
               type,
               ssh: false,
               gpg: false,
-              remote: type !== "local",
-              user,
+              remote: (type !== "local") as any,
+              user: user as any,
               selected: false,
               colors: randomColorSet(),
               sync: {
                 inProgress: false,
                 lastSyncTime: Date.now(),
               },
-            } as Profile,
+            },
           ],
         }));
         get().selectProfile(get().profiles.length - 1);
       },
-      removeProfile: (id) =>
+      removeProfile: (id) => {
         set((old) => ({
           profiles: old.profiles.filter(({ user }) => user.id !== id),
-        })),
-      selectProfile: (i) =>
+        }));
+      },
+      selectProfile: (i) => {
         set((old) => {
           const profiles = [...old.profiles];
           const oldSelectedIdx = profiles.findIndex(({ selected }) => selected);
@@ -146,8 +151,9 @@ export const usePersistStore = create(
           profile.selected = true;
 
           return { profiles, selectedId: profile.user.id };
-        }),
-      updateProfileUser: (id, mutation) =>
+        });
+      },
+      updateProfileUser: (id, mutation) => {
         set((old) => {
           const profiles = [...old.profiles];
           const idx = profiles.findIndex(({ user }) => user.id === id);
@@ -156,46 +162,53 @@ export const usePersistStore = create(
           );
           profiles[idx].user = updatedUser;
           return { profiles };
-        }),
-      setGPGKey: (id, secretId) =>
+        });
+      },
+      setGPGKey: (id, secretId) => {
         set((old) => {
           const profiles = [...old.profiles];
           const idx = profiles.findIndex(({ user }) => user.id === id);
           profiles[idx].gpg = secretId;
           return { profiles };
-        }),
-      setSSHKey: (id, pub, secret) =>
+        });
+      },
+      setSSHKey: (id, pub, secret) => {
         set((old) => {
           const profiles = [...old.profiles];
           const idx = profiles.findIndex(({ user }) => user.id === id);
           profiles[idx].ssh = { public: pub, private: secret };
           return { profiles };
-        }),
-      unsetSSHKey: (id) =>
+        });
+      },
+      unsetSSHKey: (id) => {
         set((old) => {
           const profiles = [...old.profiles];
           const idx = profiles.findIndex(({ user }) => user.id === id);
           profiles[idx].ssh = false;
           return { profiles };
-        }),
-      startSync: (id) =>
+        });
+      },
+      startSync: (id) => {
         set((old) => {
           const profiles = [...old.profiles];
           const idx = profiles.findIndex(({ user }) => user.id === id);
           profiles[idx].sync.inProgress = true;
           return { profiles };
-        }),
-      finishSync: (id) =>
+        });
+      },
+      finishSync: (id) => {
         set((old) => {
           const profiles = [...old.profiles];
           const idx = profiles.findIndex(({ user }) => user.id === id);
           profiles[idx].sync.inProgress = false;
           profiles[idx].sync.lastSyncTime = Date.now();
           return { profiles };
-        }),
+        });
+      },
       skippedVersions: [],
-      skipVersion: (v) =>
-        set((old) => ({ skippedVersions: [...old.skippedVersions, v] })),
+      skipVersion: (v) => {
+        set((old) => ({ skippedVersions: [...old.skippedVersions, v] }));
+      },
     }),
     { name: "persist-store", version: 6 }
   )

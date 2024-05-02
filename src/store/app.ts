@@ -13,11 +13,19 @@ interface AppStore {
 
 export const useAppStore = create<AppStore>((set) => ({
   isNotificationsCreated: false,
-  setNotificationsCreated: (v) => set({ isNotificationsCreated: v }),
+  setNotificationsCreated: (v) => {
+    set({ isNotificationsCreated: v });
+  },
   isGitlabImportInProgress: false,
-  setGitlabImportInProgress: (v) => set({ isGitlabImportInProgress: v }),
+  setGitlabImportInProgress: (v) => {
+    set({ isGitlabImportInProgress: v });
+  },
   isGithubImportInProgress: false,
-  setGithubImportInProgress: (v) => set({ isGithubImportInProgress: v }),
+  setGithubImportInProgress: (v) => {
+    set({ isGithubImportInProgress: v });
+  },
   isEditable: false,
-  setEditable: (v) => set({ isEditable: v }),
+  setEditable: (v) => {
+    set({ isEditable: v });
+  },
 }));

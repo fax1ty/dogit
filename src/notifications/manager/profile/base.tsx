@@ -10,7 +10,7 @@ import {
   Shield,
   User,
 } from "@phosphor-icons/react";
-import { open } from "@tauri-apps/api/shell";
+import { open } from "@tauri-apps/plugin-shell";
 import clsx from "clsx";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -18,13 +18,14 @@ import AutosizeInput from "react-input-autosize";
 import { mutate } from "swr";
 import { useT } from "talkr";
 
-import { isGPGAvailable } from "../../../api/gpg";
-import { isSSHAvailable } from "../../../api/ssh";
-import { Chip } from "../../../components/chip";
-import { Bubble } from "../../../components/floating/bubble";
-import { Typography } from "../../../components/typography";
-import { useAppStore } from "../../../store/app";
-import { Profile, usePersistStore } from "../../../store/persist";
+import { isGPGAvailable } from "@/api/gpg";
+import { isSSHAvailable } from "@/api/ssh";
+import { Chip } from "@/components/chip";
+import { Bubble } from "@/components/floating/bubble";
+import { Typography } from "@/components/typography";
+import { useAppStore } from "@/store/app";
+import { type Profile, usePersistStore } from "@/store/persist";
+
 import { GenericErrorNotification } from "../../error";
 import { AddGPGNotification } from "../../gpg/add";
 import { ManageGPGNotification } from "../../gpg/manage";
@@ -32,7 +33,7 @@ import { RemoveGPGNotification } from "../../gpg/remove";
 import { AddSSHNotification } from "../../ssh/add";
 import { ManageSSHNotification } from "../../ssh/manage";
 import { RemoveSSHNotification } from "../../ssh/remove";
-import { BaseCard, BaseCardProps } from "../card";
+import { BaseCard, type BaseCardProps } from "../card";
 import { ManageUserNotification } from "../manage";
 import classes from "./styles.module.scss";
 
@@ -116,7 +117,9 @@ export const BaseProfile = ({
           <ManageUserNotification
             toastId={t.id}
             userId={id}
-            onClose={() => setManageOpen(false)}
+            onClose={() => {
+              setManageOpen(false);
+            }}
           />
         ),
         {
@@ -161,7 +164,10 @@ export const BaseProfile = ({
               outlined={gpg}
               button
               onClick={async () => {
-                if (isGPGOpen) return hideGPGNotifications();
+                if (isGPGOpen) {
+                  hideGPGNotifications();
+                  return;
+                }
                 if (isSSHOpen) hideSSHNotifications();
                 if (isManageOpen) hideManageNotification();
 
@@ -173,7 +179,9 @@ export const BaseProfile = ({
                           id={id}
                           toastId={t.id}
                           email={email}
-                          onClose={() => setGPGOpen(false)}
+                          onClose={() => {
+                            setGPGOpen(false);
+                          }}
                         />
                       ),
                       { id: "manage-gpg" }
@@ -184,7 +192,9 @@ export const BaseProfile = ({
                         <RemoveGPGNotification
                           userId={id}
                           toastId={t.id}
-                          onClose={() => setGPGOpen(false)}
+                          onClose={() => {
+                            setGPGOpen(false);
+                          }}
                         />
                       ),
                       { id: "remove-gpg" }
@@ -199,9 +209,9 @@ export const BaseProfile = ({
                         title={T("errors.gpg_not_available.title")}
                         description={T("errors.gpg_not_available.description")}
                         actionText={T("errors.gpg_not_available.action_text")}
-                        action={async () =>
-                          await open("https://gpg4win.org/download.html")
-                        }
+                        action={async () => {
+                          await open("https://gpg4win.org/download.html");
+                        }}
                       />
                     ));
                   else {
@@ -210,7 +220,9 @@ export const BaseProfile = ({
                         <AddGPGNotification
                           userId={id}
                           toastId={t.id}
-                          onClose={() => setGPGOpen(false)}
+                          onClose={() => {
+                            setGPGOpen(false);
+                          }}
                         />
                       ),
                       {
@@ -230,7 +242,10 @@ export const BaseProfile = ({
               outlined={ssh}
               button
               onClick={async () => {
-                if (isSSHOpen) return hideSSHNotifications();
+                if (isSSHOpen) {
+                  hideSSHNotifications();
+                  return;
+                }
                 if (isGPGOpen) hideGPGNotifications();
                 if (isManageOpen) hideManageNotification();
 
@@ -241,7 +256,9 @@ export const BaseProfile = ({
                         <ManageSSHNotification
                           userId={id}
                           toastId={t.id}
-                          onClose={() => setSSHOpen(false)}
+                          onClose={() => {
+                            setSSHOpen(false);
+                          }}
                         />
                       ),
                       { id: "manage-ssh" }
@@ -252,7 +269,9 @@ export const BaseProfile = ({
                         <RemoveSSHNotification
                           userId={id}
                           toastId={t.id}
-                          onClose={() => setSSHOpen(false)}
+                          onClose={() => {
+                            setSSHOpen(false);
+                          }}
                         />
                       ),
                       { id: "remove-ssh" }
@@ -267,11 +286,11 @@ export const BaseProfile = ({
                         title={T("errors.ssh_not_available.title")}
                         description={T("errors.ssh_not_available.description")}
                         actionText={T("errors.ssh_not_available.action_text")}
-                        action={async () =>
+                        action={async () => {
                           await open(
                             "https://slproweb.com/products/Win32OpenSSL.html"
-                          )
-                        }
+                          );
+                        }}
                       />
                     ));
                   else {
@@ -280,7 +299,9 @@ export const BaseProfile = ({
                         <AddSSHNotification
                           userId={id}
                           toastId={t.id}
-                          onClose={() => setSSHOpen(false)}
+                          onClose={() => {
+                            setSSHOpen(false);
+                          }}
                         />
                       ),
                       {
@@ -353,10 +374,14 @@ export const BaseProfile = ({
                       ? T("notifications.manager.profile.lock.unlocked")
                       : T("notifications.manager.profile.lock.locked")
                     : sync === "error"
-                    ? T("notifications.manager.profile.sync_status.error")
-                    : sync.inProgress
-                    ? T("notifications.manager.profile.sync_status.in_progress")
-                    : T("notifications.manager.profile.sync_status.default")}
+                      ? T("notifications.manager.profile.sync_status.error")
+                      : sync.inProgress
+                        ? T(
+                            "notifications.manager.profile.sync_status.in_progress"
+                          )
+                        : T(
+                            "notifications.manager.profile.sync_status.default"
+                          )}
                 </Typography>
               </Bubble>
             </div>

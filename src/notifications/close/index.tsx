@@ -1,9 +1,10 @@
-import { appWindow } from "@tauri-apps/api/window";
 import { toast } from "react-hot-toast";
 import { useT } from "talkr";
 
-import { Typography } from "../../components/typography";
-import { useAppStore } from "../../store/app";
+import { Typography } from "@/components/typography";
+import { useAppStore } from "@/store/app";
+import { Windows } from "@/windows";
+
 import { BaseNotificationBody } from "../base";
 import classes from "./styles.module.scss";
 
@@ -27,7 +28,7 @@ export const CloseNotification = () => {
       onClick={async () => {
         toast.dismiss();
         setTimeout(async () => {
-          await appWindow.hide();
+          await Windows.main.hide();
           setNotificationsCreated(false);
         }, 350);
       }}

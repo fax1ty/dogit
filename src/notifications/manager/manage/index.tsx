@@ -1,25 +1,22 @@
 import { Gear, Trash } from "@phosphor-icons/react";
-import { open } from "@tauri-apps/api/shell";
+import { open } from "@tauri-apps/plugin-shell";
 import { useMemo, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useT } from "talkr";
 
-import { removeSigningKey, setAutosign } from "../../../api/git";
+import { removeSigningKey, setAutosign } from "@/api/git";
 import {
   listGPGKeys,
   listSSHKeys,
   removeGPGKey,
   removeSSHKey,
-} from "../../../api/github";
-import { deleteGPGKey } from "../../../api/gpg";
-import { removeSSHKeyFromKeychain } from "../../../api/ssh";
-import { Button } from "../../../components/buttons/default";
-import { Typography } from "../../../components/typography";
-import {
-  getProfileById,
-  Profile,
-  usePersistStore,
-} from "../../../store/persist";
+} from "@/api/github";
+import { deleteGPGKey } from "@/api/gpg";
+import { removeSSHKeyFromKeychain } from "@/api/ssh";
+import { Button } from "@/components/buttons/default";
+import { Typography } from "@/components/typography";
+import { getProfileById, type Profile, usePersistStore } from "@/store/persist";
+
 import { GenericListNotificationBody } from "../../list";
 
 interface Props {

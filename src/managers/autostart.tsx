@@ -1,9 +1,9 @@
+import { enable } from "@tauri-apps/plugin-autostart";
 import { useEffect } from "react";
-import { enable } from "tauri-plugin-autostart-api";
 
 export const Autostart = () => {
   useEffect(() => {
-    if (!import.meta.env.DEV) enable();
+    if (!import.meta.env.DEV) void enable();
   }, []);
 
   return null;

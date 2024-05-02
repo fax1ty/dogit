@@ -1,6 +1,7 @@
 import { executeBase } from "./execute";
 
-const execute = (args?: string | string[]) => executeBase("gpg", args);
+const execute = async (args?: string | string[]) =>
+  await executeBase("gpg", args);
 
 export const isGPGAvailable = async () => {
   try {
@@ -42,9 +43,10 @@ export const deleteGPGKey = async (uid: string) => {
   await execute(["--batch", "--yes", "--delete-key", uid]);
 };
 
-export const listSecretKeys = () => execute(["--keyid-format=long", "-K"]);
-export const getSecretKey = (uid: string) =>
-  execute(["--keyid-format=long", "-K", uid]);
+export const listSecretKeys = async () =>
+  await execute(["--keyid-format=long", "-K"]);
+export const getSecretKey = async (uid: string) =>
+  await execute(["--keyid-format=long", "-K", uid]);
 
-export const exportArmoredPubKey = (uid: string) =>
-  execute(["--armor", "--export", uid]);
+export const exportArmoredPubKey = async (uid: string) =>
+  await execute(["--armor", "--export", uid]);

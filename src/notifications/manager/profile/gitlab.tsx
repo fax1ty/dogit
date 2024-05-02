@@ -1,5 +1,6 @@
-import { GitlabProfile } from "../../../store/persist";
-import { BaseProfile, BaseProfileCardProps } from "./base";
+import { type GitlabProfile } from "@/store/persist";
+
+import { BaseProfile, type BaseProfileCardProps } from "./base";
 
 export const GitlabProfileCard = ({
   onPrev,

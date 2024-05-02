@@ -1,8 +1,9 @@
 import { useMemo } from "react";
 
-import { useGithubProfile } from "../../../api/github";
-import { GithubProfile, usePersistStore } from "../../../store/persist";
-import { BaseProfile, BaseProfileCardProps } from "./base";
+import { useGithubProfile } from "@/api/github";
+import { type GithubProfile, usePersistStore } from "@/store/persist";
+
+import { BaseProfile, type BaseProfileCardProps } from "./base";
 
 export const GithubProfileCard = ({
   onPrev,
@@ -32,9 +33,9 @@ export const GithubProfileCard = ({
       onPrev={onPrev}
       onNext={onNext}
       isFirst={isFirst}
-      avatar={profile?.avatar_url || localProfile.user.avatar}
-      name={profile?.name || localProfile.user.name}
-      email={profile?.email || localProfile.user.email}
+      avatar={profile?.avatar_url ?? localProfile.user.avatar}
+      name={profile?.name ?? localProfile.user.name}
+      email={profile?.email ?? localProfile.user.email}
       gpg={Boolean(gpg)}
       ssh={Boolean(ssh)}
       remote

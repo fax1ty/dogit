@@ -1,11 +1,12 @@
 import { toast } from "react-hot-toast";
 import { useT } from "talkr";
 
-import { ActionButton } from "../../components/buttons/action";
+import { ActionButton } from "@/components/buttons/action";
+
 import { GenericActionNotificationContent } from "../action";
 import {
   AutoClosableNotificationBody,
-  AutoClosableNotificationProps,
+  type AutoClosableNotificationProps,
 } from "../autoclosable";
 
 interface GenericInfoNotificationContentProps {
@@ -27,7 +28,7 @@ const GenericInfoNotificationContent = ({
 
   return (
     <GenericActionNotificationContent
-      title={title || T("info.generic.title")}
+      title={title ?? T("info.generic.title")}
       description={description}
     >
       <ActionButton
@@ -36,7 +37,7 @@ const GenericInfoNotificationContent = ({
           toast.dismiss(toastId);
         }}
       >
-        {actionText || T("info.generic.action_text")}
+        {actionText ?? T("info.generic.action_text")}
       </ActionButton>
     </GenericActionNotificationContent>
   );
@@ -55,7 +56,7 @@ export const GenericInfoNotification = ({
   return (
     <AutoClosableNotificationBody
       {...props}
-      duration={props.duration || 6 * 1000}
+      duration={props.duration ?? 6 * 1000}
     >
       <GenericInfoNotificationContent
         toastId={props.toastId}

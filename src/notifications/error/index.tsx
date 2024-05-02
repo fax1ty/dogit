@@ -1,11 +1,12 @@
 import { toast } from "react-hot-toast";
 import { useT } from "talkr";
 
-import { ActionButton } from "../../components/buttons/action";
+import { ActionButton } from "@/components/buttons/action";
+
 import { GenericActionNotificationContent } from "../action";
 import {
   AutoClosableNotificationBody,
-  AutoClosableNotificationProps,
+  type AutoClosableNotificationProps,
 } from "../autoclosable";
 
 interface GenericErrorNotificationContentProps {

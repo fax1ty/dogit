@@ -1,11 +1,13 @@
 import { useMemo } from "react";
 import useSWR from "swr";
 
-import { LocalProfile, usePersistStore } from "../store/persist";
+import { type LocalProfile, usePersistStore } from "@/store/persist";
+
 import { executeBase } from "./execute";
 import { addSSHKeyPair, startSSHAgent } from "./ssh";
 
-const execute = (args?: string | string[]) => executeBase("git", args);
+const execute = async (args?: string | string[]) =>
+  await executeBase("git", args);
 
 export const isGitAvailable = async () => {
   try {
@@ -16,24 +18,24 @@ export const isGitAvailable = async () => {
   }
 };
 
-export const getGitName = () => execute(["config", "user.name"]);
-export const getGitEmail = () => execute(["config", "user.email"]);
+export const getGitName = async () => await execute(["config", "user.name"]);
+export const getGitEmail = async () => await execute(["config", "user.email"]);
 
 const setGlobalConfigValue = async (key: string, value: string) =>
   await execute(["config", "--global", "--replace-all", key, value]);
 const unsetGlobalConfigValue = async (key: string) =>
   await execute(["config", "--global", "--unset-all", key]);
 
-export const setName = (name: string) =>
-  setGlobalConfigValue("user.name", name);
+export const setName = async (name: string) =>
+  await setGlobalConfigValue("user.name", name);
 
 export const setEmail = async (email: string) =>
-  setGlobalConfigValue("user.email", email);
+  await setGlobalConfigValue("user.email", email);
 
 export const setSigningKey = async (secretId: string) =>
-  setGlobalConfigValue("user.signingkey", secretId);
+  await setGlobalConfigValue("user.signingkey", secretId);
 export const removeSigningKey = async () =>
-  unsetGlobalConfigValue("user.signingkey");
+  await unsetGlobalConfigValue("user.signingkey");
 
 export const setAutosign = async (v: boolean) => {
   await setGlobalConfigValue("commit.gpgsign", String(v));

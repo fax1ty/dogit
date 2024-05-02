@@ -1,5 +1,6 @@
-import { Profile } from "../../../store/persist";
-import { BaseProfileCardProps } from "./base";
+import { type Profile } from "@/store/persist";
+
+import { type BaseProfileCardProps } from "./base";
 import { GithubProfileCard } from "./github";
 import { GitlabProfileCard } from "./gitlab";
 import { LocalProfileCard } from "./local";

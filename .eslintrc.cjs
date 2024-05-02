@@ -1,49 +1,27 @@
+/** @type { import("eslint").Linter.Config } */
 module.exports = {
-  root: true,
-  parser: "@typescript-eslint/parser",
-  parserOptions: {
-    ecmaVersion: 2020,
-    sourceType: "module",
-    ecmaFeatures: {
-      jsx: true,
-    },
-  },
-  settings: {
-    react: {
-      version: "detect",
-    },
-    "import/resolver": {
-      node: {
-        paths: ["src"],
-        extensions: [".js", ".jsx", ".ts", ".tsx"],
+  overrides: [
+    {
+      files: ["*.js", "*.jsx", "*.ts", "*.tsx"],
+      parserOptions: {
+        sourceType: "module",
+        ecmaVersion: "latest",
+        project: "./tsconfig.json",
+      },
+      extends: ["love", "prettier"],
+      plugins: ["prettier", "simple-import-sort"],
+      rules: {
+        "prettier/prettier": "warn",
+        "simple-import-sort/imports": "warn",
+        "simple-import-sort/exports": "warn",
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/strict-boolean-expressions": "off",
+        "@typescript-eslint/consistent-type-assertions": "off",
+        "@typescript-eslint/array-type": "off",
+        "@typescript-eslint/no-unsafe-argument": "off",
+        "@typescript-eslint/no-misused-promises": "off",
+        "@typescript-eslint/naming-convention": "off",
       },
     },
-  },
-  env: {
-    browser: true,
-    amd: true,
-    node: true,
-  },
-  extends: [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:react/recommended",
-    "plugin:react-hooks/recommended",
-    "plugin:prettier/recommended", // Make sure this is always the last element in the array.
   ],
-  plugins: ["simple-import-sort", "prettier", "react-refresh"],
-  rules: {
-    "prettier/prettier": [
-      "error",
-      { endOfLine: "auto" },
-      { usePrettierrc: true },
-    ],
-    "react/react-in-jsx-scope": "off",
-    "react/prop-types": "off",
-    "@typescript-eslint/explicit-function-return-type": "off",
-    "simple-import-sort/imports": "error",
-    "simple-import-sort/exports": "error",
-    "react/no-unescaped-entities": "off",
-    "react-refresh/only-export-components": "warn",
-  },
 };

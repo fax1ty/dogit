@@ -1,19 +1,10 @@
 use directories::UserDirs;
 use serde::Serialize;
-use std::fs::{create_dir_all, read_to_string, remove_file, write};
-use tauri::api::process::Command;
+use std::{
+    fs::{create_dir_all, read_to_string, remove_file, write},
+    process::Command,
+};
 use tempfile::TempDir;
-
-// use windows::Win32::UI::WindowsAndMessaging::{GetForegroundWindow, SetWindowPos, SWP_SHOWWINDOW};
-
-// #[tauri::command]
-// fn blur() {
-//     #[cfg(windows)]
-//     unsafe {
-//         let handle = GetForegroundWindow();
-//         SetWindowPos(handle, std::ptr::null(), 0, 0, 0, 0, SWP_SHOWWINDOW);
-//     };
-// }
 
 #[derive(Serialize)]
 pub struct SSHKeyPair {
@@ -63,8 +54,10 @@ pub fn generate_ssh_keys(email: String) -> Result<SSHKeyPair, String> {
             public_key,
         })
     } else {
-        let error_message = output.stderr;
-        Err(format!("Error generating SSH key: {}", error_message))
+        Err(format!(
+            "Error generating SSH key: {}",
+            std::str::from_utf8(&output.stderr).unwrap()
+        ))
     }
 }
 

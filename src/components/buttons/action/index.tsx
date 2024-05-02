@@ -1,9 +1,10 @@
-import { ArrowRight, Icon } from "@phosphor-icons/react";
+import { ArrowRight, type Icon } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { ButtonHTMLAttributes, createElement } from "react";
+import { type ButtonHTMLAttributes, createElement } from "react";
 import { SpinnerCircular } from "spinners-react";
 
-import { Typography } from "../../typography";
+import { Typography } from "@/components/typography";
+
 import classes from "./styles.module.scss";
 
 export type ActionButtonProps = {
@@ -23,7 +24,7 @@ export const ActionButton = ({
     <button
       {...props}
       className={clsx(props.className, classes.button)}
-      disabled={props.disabled || loading}
+      disabled={props.disabled ?? loading}
     >
       <Typography bold>{children}</Typography>
       {loading ? (

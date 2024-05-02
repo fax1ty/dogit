@@ -1,6 +1,6 @@
 import { useT } from "talkr";
 
-import { AutoClosableNotificationProps } from "../autoclosable";
+import { type AutoClosableNotificationProps } from "../autoclosable";
 import { GenericInfoNotification } from "../info";
 
 export const SSHCopiedNotification = (props: AutoClosableNotificationProps) => {

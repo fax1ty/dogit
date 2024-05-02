@@ -1,15 +1,15 @@
 import { getVersion } from "@tauri-apps/api/app";
-import { checkUpdate } from "@tauri-apps/api/updater";
+import { check as checkUpdate } from "@tauri-apps/plugin-updater";
 import { toast } from "react-hot-toast";
 
-import { useTauriEvent } from "../hooks/tauri/events";
-import { CloseNotification } from "../notifications/close";
-import { IntroNotification } from "../notifications/intro";
-import { ManagerNotification } from "../notifications/manager";
-import { UpdateNotification } from "../notifications/update";
-import { UpdaterNotification } from "../notifications/updater";
-import { useAppStore } from "../store/app";
-import { usePersistStore } from "../store/persist";
+import { useTauriEvent } from "@/hooks/tauri/events";
+import { CloseNotification } from "@/notifications/close";
+import { IntroNotification } from "@/notifications/intro";
+import { ManagerNotification } from "@/notifications/manager";
+import { UpdateNotification } from "@/notifications/update";
+import { UpdaterNotification } from "@/notifications/updater";
+import { useAppStore } from "@/store/app";
+import { usePersistStore } from "@/store/persist";
 
 export const Notifications = () => {
   const isNotificationsCreated = useAppStore(
@@ -42,12 +42,12 @@ export const Notifications = () => {
 
     if (!import.meta.env.DEV) {
       try {
-        const { shouldUpdate, manifest } = await checkUpdate();
+        const update = await checkUpdate();
 
-        if (shouldUpdate && manifest) {
+        if (update) {
           toast(
             (t) => (
-              <UpdaterNotification version={manifest.version} toastId={t.id} />
+              <UpdaterNotification version={update.version} toastId={t.id} />
             ),
             {
               id: "updater",
@@ -61,7 +61,7 @@ export const Notifications = () => {
 
     const profiles = usePersistStore.getState().profiles;
 
-    if (isFirstTime && !profiles.length) {
+    if (isFirstTime && profiles.length === 0) {
       toast(<IntroNotification />, { id: "intro" });
     } else toast(<ManagerNotification />, { id: "manager" });
 

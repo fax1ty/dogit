@@ -35,7 +35,9 @@ export const useVirtualScroll = () => {
     const timeout = setTimeout(() => {
       handle.style.transition = "unset";
     }, duration);
-    return () => clearTimeout(timeout);
+    return () => {
+      clearTimeout(timeout);
+    };
   };
 
   useEffect(() => {
@@ -43,13 +45,17 @@ export const useVirtualScroll = () => {
     const handle = handleRef.current;
     const listener = () => (active.current = true);
     handle.addEventListener("mousedown", listener);
-    return () => handle.removeEventListener("mousedown", listener);
+    return () => {
+      handle.removeEventListener("mousedown", listener);
+    };
   }, []);
 
   useEffect(() => {
     const listener = () => (active.current = false);
     window.addEventListener("mouseup", listener);
-    return () => window.removeEventListener("mouseup", listener);
+    return () => {
+      window.removeEventListener("mouseup", listener);
+    };
   }, []);
 
   useEffect(() => {

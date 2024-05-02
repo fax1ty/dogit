@@ -1,11 +1,12 @@
 import { Clipboard, Trash } from "@phosphor-icons/react";
-import { clipboard } from "@tauri-apps/api";
+import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { toast } from "react-hot-toast";
 import { useT } from "talkr";
 
-import { Button } from "../../components/buttons/default";
-import { Typography } from "../../components/typography";
-import { getProfileById, Profile } from "../../store/persist";
+import { Button } from "@/components/buttons/default";
+import { Typography } from "@/components/typography";
+import { getProfileById, type Profile } from "@/store/persist";
+
 import { GenericListNotificationBody } from "../list";
 import { SSHCopiedNotification } from "./copied";
 import { RemoveSSHNotification } from "./remove";
@@ -24,8 +25,8 @@ export const ManageSSHNotification = ({ userId, toastId, onClose }: Props) => {
       <Button
         onClick={async () => {
           const profile = getProfileById(userId);
-          if (!profile || !profile.ssh) return;
-          await clipboard.writeText(profile.ssh.public);
+          if (!profile?.ssh) return;
+          await writeText(profile.ssh.public);
           toast((t) => <SSHCopiedNotification toastId={t.id} />);
           toast.dismiss(toastId);
           if (onClose) onClose();

@@ -1,8 +1,9 @@
 import clsx from "clsx";
-import { HTMLAttributes, ReactElement } from "react";
+import { type HTMLAttributes, type ReactElement } from "react";
 import { toast } from "react-hot-toast";
 
-import { useVisualProgress } from "../../hooks/progress";
+import { useVisualProgress } from "@/hooks/progress";
+
 import { BaseNotificationBody } from "../base";
 import classes from "./styles.module.scss";
 

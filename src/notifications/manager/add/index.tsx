@@ -4,10 +4,11 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { useT } from "talkr";
 
-import { Typography } from "../../../components/typography";
-import { useAppStore } from "../../../store/app";
+import { Typography } from "@/components/typography";
+import { useAppStore } from "@/store/app";
+
 import { ImportNotification } from "../../import";
-import { BaseCard, BaseCardProps } from "../card";
+import { BaseCard, type BaseCardProps } from "../card";
 import classes from "./styles.module.scss";
 
 type Props = Omit<BaseCardProps, "onNext">;

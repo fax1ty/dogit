@@ -1,10 +1,11 @@
 import {
-  appWindow,
   // currentMonitor,
   LogicalPosition,
   // LogicalSize,
 } from "@tauri-apps/api/window";
 import { useEffect, useRef } from "react";
+
+import { Windows } from "@/windows";
 // import { useToasterStore } from "react-hot-toast";
 
 export const Resizer = () => {
@@ -35,11 +36,11 @@ export const Resizer = () => {
   const isResizeDone = useRef(false);
 
   useEffect(() => {
-    (async () => {
+    void (async () => {
       if (isResizeDone.current) return;
-      const factor = await appWindow.scaleFactor();
-      const position = (await appWindow.outerPosition()).toLogical(factor);
-      await appWindow.setPosition(
+      const factor = await Windows.main.scaleFactor();
+      const position = (await Windows.main.outerPosition()).toLogical(factor);
+      await Windows.main.setPosition(
         new LogicalPosition(position.x - 20, position.y - 70)
       );
       isResizeDone.current = true;

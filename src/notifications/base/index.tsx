@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { HTMLAttributes, ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 
 import classes from "./styles.module.scss";
 

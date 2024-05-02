@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { ButtonHTMLAttributes } from "react";
+import { type ButtonHTMLAttributes } from "react";
 import { SpinnerCircular } from "spinners-react";
 
 import classes from "./styles.module.scss";
